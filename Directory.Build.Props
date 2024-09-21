@@ -1,0 +1,35 @@
+<Project>
+  <PropertyGroup>
+    <!-- Target the latest .NET version -->
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Enable strict mode for the Roslyn compiler -->
+    <Features>strict</Features>
+
+    <!-- Enable nullable reference types and treat warnings as errors -->
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisMode>Recommended</AnalysisMode>
+
+    <!-- Enable .NET analyzers and enforce code style in build -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+
+    <!-- Manage package versions centrally -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+    <!-- Enable documentation file generation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Disable XML documentation warnings -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+
+    <!-- Additional metadata for the project -->
+    <Authors>Nuo Chen</Authors>
+  </PropertyGroup>
+</Project>
