@@ -9,7 +9,7 @@ using StopWord;
 ///     This class is designed to be used in natural language processing (NLP) tasks, such as clustering or classification,
 ///     where text data needs to be transformed into a format that can be processed by machine learning algorithms.
 /// </remarks>
-namespace TextClustering.Embedding;
+namespace TextClustering.Embedding.BoWVectorizer;
 
 using TermFrequency = Dictionary<string, int>;
 
@@ -147,7 +147,8 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
 
-        return documentTermFrequency.AsParallel()
+        return documentTermFrequency
+            .AsParallel()
             .Select(termFrequency =>
             {
                 Dictionary<int, float> sparseVector = new();

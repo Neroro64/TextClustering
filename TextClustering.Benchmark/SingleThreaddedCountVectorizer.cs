@@ -1,7 +1,4 @@
-using System.Text.RegularExpressions;
-
-
-using TextClustering.Embedding;
+using TextClustering.Embedding.BoWVectorizer;
 
 namespace TextClustering.Benchmark;
 

@@ -1,4 +1,4 @@
-namespace TextClustering.Embedding;
+namespace TextClustering.Embedding.BoWVectorizer;
 
 using TermFrequency = Dictionary<string, int>;
 

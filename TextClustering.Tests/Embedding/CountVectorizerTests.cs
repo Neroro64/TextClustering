@@ -1,4 +1,4 @@
-using TextClustering.Embedding;
+using TextClustering.Embedding.BoWVectorizer;
 
 namespace TextClustering.Tests.Embedding;
 
