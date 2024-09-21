@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using HdbscanSharp.Distance;
 using HdbscanSharp.Runner;
+
 using StopWord;
 
 namespace TextClustering
@@ -12,7 +14,7 @@ namespace TextClustering
         public List<List<T>> Clusters { get; set; }
         public List<T> Unclassified { get; set; }
     }
-    
+
     public static class TextClustering
     {
         public static ClusteringResult<T> ClusterBy<T>(this IEnumerable<T> items,
@@ -62,7 +64,7 @@ namespace TextClustering
 
                 if (clustersItems == null)
                     continue;
-                
+
                 if (iCluster == 0)
                     clusteringResult.Unclassified.AddRange(clustersItems);
                 else
@@ -140,7 +142,7 @@ namespace TextClustering
             var stopWordList = config.Languages
                 .SelectMany(language => StopWords.GetStopWords(language.GetShortCode()).Select(x => x.ToLower()))
                 .Distinct();
-            
+
             return new HashSet<string>(stopWordList);
         }
 
