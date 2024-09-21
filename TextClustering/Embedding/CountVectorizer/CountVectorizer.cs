@@ -11,9 +11,12 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
     private readonly Regex WordSeparatorRegex = BuildSeparatorRegexPattern(config.WordSeparator);
     private readonly HashSet<string> StopWord = GetStopWordSet(config.Languages, config.Lowercase);
     public Dictionary<string, TermStats> Vocabulary { get; } = [];
-    public long TotalDocumentCount { get; private set; } = 0;
+    public long TotalDocumentCount { get; private set; }
 
-    public void Reset() => Vocabulary.Clear();
+    public void Reset()
+    {
+        Vocabulary.Clear();
+    }
 
     public void Fit(IEnumerable<string> documents)
     {
@@ -36,31 +39,35 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
         return ToSparseVector(documentTermFrequency);
     }
 
-    private List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents) => documents
-            .Select(document => ExtractTermFrequency(document))
-            .Where(tf => tf.Keys.Count > 0)
+    private List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents)
+    {
+        return documents
+            .Select(ExtractTermFrequency)
+            .Where(static tf => tf.Keys.Count > 0)
             .ToList();
+    }
 
     private TermFrequency ExtractTermFrequency(string document)
     {
         var termFrequency = new TermFrequency();
         var words = WordSeparatorRegex
             .Split(document)
-            .Where(word => !String.IsNullOrWhiteSpace(word));
+            .Where(word => !string.IsNullOrWhiteSpace(word));
 
-        foreach (var word in words)
+        foreach (string word in words)
         {
-            var l = word.Length;
-            if (l < config.MinWordLength
+            if (word.Length < config.MinWordLength
                 || StopWord.Contains(word))
+            {
                 continue;
+            }
 
-            var term = config.Lowercase ? word.ToLowerInvariant() : word;
+            string term = config.Lowercase ? word.ToLowerInvariant() : word;
 
-            if (termFrequency.ContainsKey(term))
+            if (!termFrequency.TryAdd(term, 1))
+            {
                 termFrequency[term]++;
-            else
-                termFrequency.Add(term, 1);
+            }
         }
 
         return termFrequency;
@@ -73,9 +80,9 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
         {
             foreach (var term in termFrequency)
             {
-                if (Vocabulary.ContainsKey(term.Key))
+                if (Vocabulary.TryGetValue(term.Key, out var termStats))
                 {
-                    Vocabulary[term.Key].NumberOfDocumentsWhereTheTermAppears += 1;
+                    termStats.NumberOfDocumentsWhereTheTermAppears += 1;
                 }
                 else
                 {
@@ -90,11 +97,11 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
         int maxDocumentFrequency = (int)(TotalDocumentCount * config.MaxDocumentPresence);
         foreach (var termFrequency in documentTermFrequency)
         {
-            Dictionary<int, float> sparseVector = new();
+            Dictionary<int, float> sparseVector = [];
             foreach (var tf in termFrequency)
             {
-                if (!Vocabulary.ContainsKey(tf.Key)
-                    || Vocabulary[tf.Key].NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
+                if (!Vocabulary.TryGetValue(tf.Key, out var value)
+                    || value?.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
                 {
                     continue;
                 }
@@ -106,20 +113,18 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
 
     private static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
     {
-        if (languages is [])
-            return new HashSet<string>();
-
-        return languages
-            .SelectMany(language => StopWords.GetStopWords(language.GetShortCode()).Select(x => toLowercase ? x.ToLower() : x))
-            .ToHashSet();
+        return languages is []
+            ? []
+            : languages.SelectMany(
+                    language => StopWords.GetStopWords(language.GetShortCode())
+                    .Select(x => toLowercase ? x.ToLowerInvariant() : x))
+                .ToHashSet();
     }
 
     private static Regex BuildSeparatorRegexPattern(char[] separators)
     {
-        if (separators is [])
-            return new Regex(@"[^a-zA-Z0-9]", RegexOptions.CultureInvariant);
-
-        return new Regex($"[{Regex.Escape(new string(separators))}]", RegexOptions.CultureInvariant);
+        return separators is []
+            ? new Regex(@"[^a-zA-Z0-9]", RegexOptions.CultureInvariant)
+            : new Regex($"[{Regex.Escape(new string(separators))}]", RegexOptions.CultureInvariant);
     }
-
 }

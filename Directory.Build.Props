@@ -29,6 +29,9 @@
     <!-- Disable XML documentation warnings -->
     <NoWarn>$(NoWarn);1591</NoWarn>
 
+    <!-- Disable warnings about preferring upper case normalization -->
+    <NoWarn>$(NoWarn);1304</NoWarn>
+
     <!-- Additional metadata for the project -->
     <Authors>Nuo Chen</Authors>
   </PropertyGroup>

@@ -36,66 +36,37 @@ internal static class LanguageExtensions
 {
     internal static string GetShortCode(this Language language)
     {
-        switch (language)
+        return language switch
         {
-            case Language.Arabic:
-                return "ar";
-            case Language.Bulgarian:
-                return "bg";
-            case Language.Catalan:
-                return "ca";
-            case Language.Czech:
-                return "cs";
-            case Language.Danish:
-                return "da";
-            case Language.Dutch:
-                return "nl";
-            case Language.English:
-                return "en";
-            case Language.Finnish:
-                return "fi";
-            case Language.French:
-                return "fr";
-            case Language.German:
-                return "de";
-            case Language.Gujarati:
-                return "gu";
-            case Language.Hebrew:
-                return "he";
-            case Language.Hindi:
-                return "hi";
-            case Language.Hungarian:
-                return "hu";
-            case Language.Indonesian:
-                return "id";
-            case Language.Malaysian:
-                return "ms";
-            case Language.Italian:
-                return "it";
-            case Language.Norwegian:
-                return "nb";
-            case Language.Polish:
-                return "pl";
-            case Language.Portuguese:
-                return "pt";
-            case Language.Romanian:
-                return "ro";
-            case Language.Russian:
-                return "ru";
-            case Language.Slovak:
-                return "sk";
-            case Language.Spanish:
-                return "es";
-            case Language.Swedish:
-                return "sv";
-            case Language.Turkish:
-                return "tr";
-            case Language.Ukrainian:
-                return "uk";
-            case Language.Vietnamese:
-                return "vi";
-            default:
-                throw new ArgumentOutOfRangeException(nameof(language), language, null);
-        }
+            Language.Arabic => "ar",
+            Language.Bulgarian => "bg",
+            Language.Catalan => "ca",
+            Language.Czech => "cs",
+            Language.Danish => "da",
+            Language.Dutch => "nl",
+            Language.English => "en",
+            Language.Finnish => "fi",
+            Language.French => "fr",
+            Language.German => "de",
+            Language.Gujarati => "gu",
+            Language.Hebrew => "he",
+            Language.Hindi => "hi",
+            Language.Hungarian => "hu",
+            Language.Indonesian => "id",
+            Language.Malaysian => "ms",
+            Language.Italian => "it",
+            Language.Norwegian => "nb",
+            Language.Polish => "pl",
+            Language.Portuguese => "pt",
+            Language.Romanian => "ro",
+            Language.Russian => "ru",
+            Language.Slovak => "sk",
+            Language.Spanish => "es",
+            Language.Swedish => "sv",
+            Language.Turkish => "tr",
+            Language.Ukrainian => "uk",
+            Language.Vietnamese => "vi",
+            _ => throw new ArgumentOutOfRangeException(nameof(language), language, null),
+        };
     }
 }
