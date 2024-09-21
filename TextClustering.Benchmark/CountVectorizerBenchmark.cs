@@ -2,7 +2,7 @@ using System.Text;
 
 using BenchmarkDotNet.Attributes;
 
-using TextClustering.Embedding.CountVectorizer;
+using TextClustering.Embedding;
 
 namespace TextClustering.Benchmark;
 

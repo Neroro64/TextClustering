@@ -1,4 +1,4 @@
-namespace TextClustering.Embedding.CountVectorizer;
+namespace TextClustering.Embedding;
 
 public record BoWVectorizerConfig
 {

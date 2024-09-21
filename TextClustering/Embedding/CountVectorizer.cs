@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 using StopWord;
 
-namespace TextClustering.Embedding.CountVectorizer;
+namespace TextClustering.Embedding;
 
 using TermFrequency = Dictionary<string, int>;
 
