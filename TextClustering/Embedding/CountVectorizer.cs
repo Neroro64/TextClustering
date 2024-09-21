@@ -8,10 +8,11 @@ using TermFrequency = Dictionary<string, int>;
 
 public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
 {
-    private readonly Regex WordSeparatorRegex = BuildSeparatorRegexPattern(config.WordSeparator);
-    private readonly HashSet<string> StopWord = GetStopWordSet(config.Languages, config.Lowercase);
+    protected BoWVectorizerConfig Config => config;
+    protected readonly Regex WordSeparatorRegex = BuildSeparatorRegexPattern(config.WordSeparator);
+    protected readonly HashSet<string> StopWord = GetStopWordSet(config.Languages, config.Lowercase);
     public Dictionary<string, TermStats> Vocabulary { get; } = [];
-    public long TotalDocumentCount { get; private set; }
+    public long TotalDocumentCount { get; protected set; }
 
     public void Reset()
     {
@@ -39,7 +40,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
         return ToSparseVector(documentTermFrequency);
     }
 
-    private List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents)
+    protected virtual List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents)
     {
         return documents
             .AsParallel()
@@ -48,7 +49,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
             .ToList();
     }
 
-    private TermFrequency ExtractTermFrequency(string document)
+    protected TermFrequency ExtractTermFrequency(string document)
     {
         var termFrequency = new TermFrequency();
         var words = WordSeparatorRegex
@@ -57,13 +58,13 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
 
         foreach (string word in words)
         {
-            if (word.Length < config.MinWordLength
+            if (word.Length < Config.MinWordLength
                 || StopWord.Contains(word))
             {
                 continue;
             }
 
-            string term = config.Lowercase ? word.ToLowerInvariant() : word;
+            string term = Config.Lowercase ? word.ToLowerInvariant() : word;
 
             if (!termFrequency.TryAdd(term, 1))
             {
@@ -74,7 +75,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
         return termFrequency;
     }
 
-    private void UpdateVocabulary(IEnumerable<TermFrequency> documentTermFrequency)
+    protected void UpdateVocabulary(IEnumerable<TermFrequency> documentTermFrequency)
     {
         int newTermId = Vocabulary.Count + 1;
         foreach (var termFrequency in documentTermFrequency)
@@ -87,15 +88,15 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
                 }
                 else
                 {
-                    Vocabulary.Add(term.Key, new TermStats(id: newTermId++, documentFrequency: 1));
+                    Vocabulary.Add(term.Key, new TermStats { Id = newTermId++, NumberOfDocumentsWhereTheTermAppears = 1 });
                 }
             }
         }
     }
 
-    private Dictionary<int, float>[] ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
+    protected virtual Dictionary<int, float>[] ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
     {
-        int maxDocumentFrequency = (int)(TotalDocumentCount * config.MaxDocumentPresence);
+        int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
             .AsParallel()
             .Select(termFrequency =>
@@ -115,7 +116,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
             .ToArray();
     }
 
-    private static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
+    protected static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
     {
         return languages is []
             ? []
@@ -125,7 +126,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
                 .ToHashSet();
     }
 
-    private static Regex BuildSeparatorRegexPattern(char[] separators)
+    protected static Regex BuildSeparatorRegexPattern(char[] separators)
     {
         return separators is []
             ? new Regex(@"[^a-zA-Z0-9]", RegexOptions.CultureInvariant)

@@ -1,7 +1,7 @@
 namespace TextClustering.Embedding;
 
-public record TermStats(int id, int documentFrequency)
+public record TermStats
 {
-    public int Id { get; set; } = id;
-    public int NumberOfDocumentsWhereTheTermAppears { get; set; } = documentFrequency;
+    public int Id { get; init; }
+    public int NumberOfDocumentsWhereTheTermAppears { get; set; }
 }

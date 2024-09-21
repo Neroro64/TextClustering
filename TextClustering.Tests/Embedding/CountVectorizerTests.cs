@@ -16,8 +16,8 @@ public class CountVectorizerTests
 
         // Assert
         Assert.AreEqual(2, vectorizer.Vocabulary.Count, "Expected vocabulary size of 2");
-        Assert.AreEqual(new TermStats(1, 1), vectorizer.Vocabulary["hello"], "'hello' stats do not match expected values.");
-        Assert.AreEqual(new TermStats(2, 1), vectorizer.Vocabulary["world"], "'world' stats do not match expected values.");
+        Assert.AreEqual(new TermStats { Id = 1, NumberOfDocumentsWhereTheTermAppears = 1 }, vectorizer.Vocabulary["hello"], "'hello' stats do not match expected values.");
+        Assert.AreEqual(new TermStats { Id = 2, NumberOfDocumentsWhereTheTermAppears = 1 }, vectorizer.Vocabulary["world"], "'world' stats do not match expected values.");
 
     }
 
@@ -127,6 +127,7 @@ public class CountVectorizerTests
         // Assert
         Assert.IsNotNull(result1);
         Assert.IsNotNull(result2);
+        Assert.AreEqual(1, result1.Count);
         Assert.IsTrue(result2.ContainsKey(1) && result2.ContainsKey(3), "Both 'apple' and 'cherry' should be in vocabulary after second fit");
     }
 }
