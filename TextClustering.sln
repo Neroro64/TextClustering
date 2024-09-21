@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Embedding", "TextClustering
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClustering.Tests", "TextClustering.Tests\TextClustering.Tests.csproj", "{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClustering.Benchmark", "TextClustering.Benchmark\TextClustering.Benchmark.csproj", "{D7FC25CA-E45A-4030-B870-83DD0A33FB30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3CBF2B18-6A45-4018-A80F-00C98EC834BA} = {624F78FC-338F-440A-9799-974B345D7430}

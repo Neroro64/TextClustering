@@ -1,15 +1,16 @@
 using System.Text.RegularExpressions;
 
-using StopWord;
 
-namespace TextClustering.Embedding.CountVectorizer;
+using TextClustering.Embedding;
+using TextClustering.Embedding.CountVectorizer;
+
+namespace TextClustering.Benchmark;
 
 using TermFrequency = Dictionary<string, int>;
 
-public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
+public class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) : IVectorizer
 {
     private readonly Regex WordSeparatorRegex = BuildSeparatorRegexPattern(config.WordSeparator);
-    private readonly HashSet<string> StopWord = GetStopWordSet(config.Languages, config.Lowercase);
     public Dictionary<string, TermStats> Vocabulary { get; } = [];
     public long TotalDocumentCount { get; private set; }
 
@@ -42,7 +43,6 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
     private List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents)
     {
         return documents
-            .AsParallel()
             .Select(ExtractTermFrequency)
             .Where(static tf => tf.Keys.Count > 0)
             .ToList();
@@ -57,8 +57,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
 
         foreach (string word in words)
         {
-            if (word.Length < config.MinWordLength
-                || StopWord.Contains(word))
+            if (word.Length < config.MinWordLength)
             {
                 continue;
             }
@@ -97,7 +96,6 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * config.MaxDocumentPresence);
         return documentTermFrequency
-            .AsParallel()
             .Select(termFrequency =>
             {
                 Dictionary<int, float> sparseVector = [];
@@ -115,15 +113,6 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer
             .ToArray();
     }
 
-    private static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
-    {
-        return languages is []
-            ? []
-            : languages.SelectMany(
-                    language => StopWords.GetStopWords(language.GetShortCode())
-                    .Select(x => toLowercase ? x.ToLowerInvariant() : x))
-                .ToHashSet();
-    }
 
     private static Regex BuildSeparatorRegexPattern(char[] separators)
     {

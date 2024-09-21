@@ -1,9 +1,8 @@
-﻿<Project Sdk="MSTest.Sdk/3.5.1">
+<Project Sdk="MSTest.Sdk/3.5.1">
 
   <ItemGroup>
     <ProjectReference Include="..\TextClustering\Embedding\Embedding.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>latest</LangVersion>
