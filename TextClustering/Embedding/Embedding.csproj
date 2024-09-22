@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="FastBertTokenizer" Version="1.0.28" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.19.2" />
-    <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="3.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="dotnet-stop-words" Version="1.1.0" />
   </ItemGroup>
