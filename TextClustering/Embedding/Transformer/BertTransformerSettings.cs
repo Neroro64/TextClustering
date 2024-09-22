@@ -1,11 +1,14 @@
 namespace TextClustering.Embedding.Transformer;
 
 public record BertTransformerSettings(
-    bool useCuda = false,
-    bool convertToLowercase = true,
-    int sequenceLength = 384
+    bool UseCuda = false,
+    bool ConvertToLowercase = true,
+    int InputDimension = 256,
+    int EmbeddingDimension = 384,
+    int BatchSize = 32,
+    int StrideSize = 25
 )
 {
-    public (string name, int[] dimension)[] ModelInputSpec { get; init; } = [("input_ids", [1, 256]), ("attention_mask", [1, 256])];
-    public (string name, int[] dimension)[] ModelOutputSpec { get; init; } = [("sentence_embedding", [1, 384])];
+    public string[] ModelInputLayerNames { get; init; } = ["input_ids", "attention_mask"];
+    public string[] ModelOutputLayerNames { get; init; } = ["sentence_embedding"];
 }

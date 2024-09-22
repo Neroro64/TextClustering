@@ -1,3 +1,5 @@
+#pragma warning disable FBERTTOK001
+
 using System.Collections.ObjectModel;
 
 using FastBertTokenizer;
@@ -10,8 +12,8 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 {
     public BertTokenizer Tokenizer { get; init; } = new BertTokenizer();
 
-    private const string _tokenizerFilePath = "Transformer/PretrainedModel/tokenizer.json";
-    private const string _modelFilePath = "Transformer/PretrainedModel/all-MiniLM-L6-v2.onnx";
+    private const string _tokenizerJsonPath = "Transformer/PretrainedModel/tokenizer.json";
+    private const string _onnxModelPath = "Transformer/PretrainedModel/all-MiniLM-L6-v2.onnx";
     private readonly BertTransformerSettings _settings;
 
     private readonly SessionOptions _sessionOptions;
@@ -19,37 +21,27 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 
     private readonly float[] _outputBuffer;
 
-    public BertTransformer(BertTransformerSettings? settings = null)
+    public BertTransformer(
+            string? tokenizerJsonPath = null,
+            string? onnxModelPath = null,
+            BertTransformerSettings? settings = null
+    )
     {
         _settings = settings ?? new BertTransformerSettings();
 
         // Load the tokenizer
-        using var tokenizerConfigStream = new FileStream(_tokenizerFilePath, FileMode.Open, FileAccess.Read);
+        using var tokenizerConfigStream = new FileStream(tokenizerJsonPath ?? _tokenizerJsonPath, FileMode.Open, FileAccess.Read);
         Tokenizer.LoadTokenizerJson(tokenizerConfigStream);
 
-        _sessionOptions = _settings.useCuda
+        // Intialize the InferenceSession and set logging level to fatal.
+        _sessionOptions = _settings.UseCuda
             ? SessionOptions.MakeSessionOptionWithCudaProvider(0)
             : new SessionOptions();
         _sessionOptions.LogSeverityLevel = OrtLoggingLevel.ORT_LOGGING_LEVEL_FATAL;
-        _session = new InferenceSession(_modelFilePath, _sessionOptions);
+        _session = new InferenceSession(onnxModelPath ?? _onnxModelPath, _sessionOptions);
 
-        _outputBuffer = new float[_settings.sequenceLength];
-
-        // using var output = OrtValue.CreateTensorValueFromMemory(new float[384], [1, 384]);
-        // using var runOptions = new RunOptions();
-        // var (_inputIds, _attentionMask, _) = Tokenizer.Encode("HELLo world bruh", padTo: 256);
-        // using var inputIds = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, _inputIds, [1, 256]);
-        // using var attentionMask = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, _attentionMask, [1, 256]);
-        // session.Run(
-        //         runOptions,
-        //         inputNames: ["input_ids", "attention_mask"],
-        //         inputValues: [inputIds, attentionMask],
-        //         outputNames: ["sentence_embedding"],
-        //         outputValues: [output]
-        //         );
-        //
-        // float[] embedding = output.GetTensorDataAsSpan<float>().ToArray();
-        // string s = string.Join(", ", embedding);
+        // Initialize the output buffer for storing embedding outputs.
+        _outputBuffer = new float[_settings.BatchSize * _settings.EmbeddingDimension];
     }
 
     public void Dispose()
@@ -65,11 +57,49 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 
     public ReadOnlyCollection<float[]> Transform(IEnumerable<string> documents)
     {
-        throw new NotImplementedException();
+        var batchSize = _settings.BatchSize;
+        var inputLayerNames = _settings.ModelInputLayerNames;
+        var inputDimention = _settings.InputDimension;
+        var outputLayerNames = _settings.ModelOutputLayerNames;
+        var outputDimention = _settings.EmbeddingDimension;
+
+        using var runOptions = new RunOptions();
+        using var output = OrtValue.CreateTensorValueFromMemory<float>(OrtMemoryInfo.DefaultInstance, _outputBuffer, [batchSize, outputDimention]);
+
+        int documentCount = 0;
+        List<float[]> embeddings = [];
+        foreach (var batch in Tokenizer.CreateBatchEnumerator(
+                    documents.Select(doc => (documentCount++, doc)),
+                    _settings.InputDimension,
+                    batchSize,
+                    _settings.StrideSize))
+        {
+            var inputIds = batch.InputIds;
+            var attentionMask = batch.AttentionMask;
+
+            using var inputIdTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, inputIds, [batchSize, inputDimention]);
+            using var attentionMaskTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, attentionMask, [batchSize, inputDimention]);
+
+            _session.Run(
+                    runOptions,
+                    inputNames: inputLayerNames,
+                    inputValues: [inputIdTensor, attentionMaskTensor],
+                    outputNames: outputLayerNames,
+                    outputValues: [output]
+                    );
+
+            int actualBatchSize = Math.Min(documentCount, batchSize);
+            for (int i = 0; i < actualBatchSize; i++)
+            {
+                embeddings.Add(output
+                    .GetTensorDataAsSpan<float>()
+                    .Slice(i * outputDimention, outputDimention)
+                    .ToArray());
+            }
+        }
+
+        return new(embeddings[..documentCount]);
     }
 
-    public ReadOnlyCollection<float[]> FitThenTransform(IEnumerable<string> documents)
-    {
-        throw new NotImplementedException();
-    }
+    public ReadOnlyCollection<float[]> FitThenTransform(IEnumerable<string> documents) => Transform(documents);
 }
