@@ -1,3 +1,5 @@
+using System.Text;
+
 using TextClustering.Embedding.Transformer;
 
 namespace TextClustering.Tests.Embedding;
@@ -17,6 +19,36 @@ public class BertTransformerTests
         // Assert
         Assert.IsNotNull(embedding);
         Assert.AreEqual(384, embedding.Length);
+    }
+
+    [TestMethod]
+    public void Transform_StringsLongerThanInputDimension()
+    {
+        // Arrange
+        using var transformer = new BertTransformer();
+        var defaultSettings = new BertTransformerSettings();
+        int strLength = defaultSettings.InputDimension * 3;
+        var random = new Random(Seed: 42);
+
+        var builder = new StringBuilder();
+        for (int i = 0; i < strLength; i++)
+        {
+            char c = (char)random.Next(32, 127); // ASCII printable characters
+            _ = builder.Append(c);
+        }
+        string randomString = builder.ToString();
+        string[] inputStrings = [
+            randomString[..(defaultSettings.InputDimension+1)],
+            randomString
+        ];
+
+        // Act
+        var embeddings = transformer.Transform(inputStrings);
+
+        // Assert
+        Assert.AreEqual(2, embeddings.Count);
+        Assert.AreEqual(384, embeddings[0].Length);
+        Assert.AreEqual(384, embeddings[1].Length);
     }
 
     [TestMethod]
