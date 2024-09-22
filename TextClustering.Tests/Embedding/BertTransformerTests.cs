@@ -9,7 +9,7 @@ public class BertTransformerTests
     public void Transform_SingleString()
     {
         // Arrange
-        var transformer = new BertTransformer();
+        using var transformer = new BertTransformer();
 
         // Act
         float[]? embedding = transformer.Transform(["hello world"]).FirstOrDefault();
@@ -23,7 +23,7 @@ public class BertTransformerTests
     public void Transform_MultipleStrings()
     {
         // Arrange
-        var transformer = new BertTransformer();
+        using var transformer = new BertTransformer();
 
         // Act
         var embeddings = transformer.Transform(_testDocuments);
@@ -40,7 +40,7 @@ public class BertTransformerTests
     {
         // Arrange
         int documentCount = (new BertTransformerSettings().BatchSize * 2) + 1;
-        var transformer = new BertTransformer();
+        using var transformer = new BertTransformer();
         var testDocuments = new List<string>();
         for (int i = 0; i < documentCount; ++i)
         {

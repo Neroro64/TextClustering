@@ -7,14 +7,14 @@ namespace TextClustering.Embedding.BoWVectorizer;
 public sealed class TFIDFVectorizer(BoWVectorizerConfig config) : CountVectorizer(config)
 {
     /// <inheritdoc/>
-    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    protected override IList<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
             .AsParallel()
             .Select(termFrequency =>
             {
-                Dictionary<int, float> sparseVector = new();
+                Dictionary<int, float> sparseVector = [];
                 foreach (var tf in termFrequency)
                 {
                     if (!Vocabulary.TryGetValue(tf.Key, out var value) || value?.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)

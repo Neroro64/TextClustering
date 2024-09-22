@@ -2,11 +2,9 @@ using TextClustering.Embedding.BoWVectorizer;
 
 namespace TextClustering.Benchmark;
 
-using TermFrequency = Dictionary<string, int>;
-
-public sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) : CountVectorizer(config)
+internal sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) : CountVectorizer(config)
 {
-    protected override List<TermFrequency> ExtractTermFrequency(IEnumerable<string> documents)
+    protected override List<Dictionary<string, int>> ExtractTermFrequency(IEnumerable<string> documents)
     {
         return documents
             .Select(ExtractTermFrequency)
@@ -14,7 +12,7 @@ public sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) :
             .ToList();
     }
 
-    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
+    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency

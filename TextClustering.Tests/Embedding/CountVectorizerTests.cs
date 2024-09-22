@@ -119,10 +119,10 @@ public class CountVectorizerTests
 
         // Act
         vectorizer.Fit(docs1);
-        var result1 = vectorizer.Transform(new List<string> { "apple cherry" }).FirstOrDefault();
+        var result1 = vectorizer.Transform(["apple cherry"]).FirstOrDefault();
 
         vectorizer.Fit(docs2);
-        var result2 = vectorizer.Transform(new List<string> { "apple cherry" }).FirstOrDefault();
+        var result2 = vectorizer.Transform(["apple cherry"]).FirstOrDefault();
 
         // Assert
         Assert.IsNotNull(result1);

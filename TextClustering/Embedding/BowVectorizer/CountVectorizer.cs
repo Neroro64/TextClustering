@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 
 using StopWord;
 
+namespace TextClustering.Embedding.BoWVectorizer;
+
 /// <summary>
 ///     A vectorizer that converts text documents into sparse vectors by counting the occurrences of each word.
 /// </summary>
@@ -11,8 +13,6 @@ using StopWord;
 ///     This class is designed to be used in natural language processing (NLP) tasks, such as clustering or classification,
 ///     where text data needs to be transformed into a format that can be processed by machine learning algorithms.
 /// </remarks>
-namespace TextClustering.Embedding.BoWVectorizer;
-
 public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionary<int, float>>
 {
     /// <summary>
@@ -33,7 +33,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// <summary>
     ///     Vocabulary containing all unique terms found in the documents along with their term statistics.
     /// </summary>
-    public Dictionary<string, TermStats> Vocabulary { get; } = new();
+    public Dictionary<string, TermStats> Vocabulary { get; } = [];
 
     /// <summary>
     ///     Total number of documents.
@@ -76,7 +76,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// </summary>
     /// <param name="documents">Collection of text documents to extract term frequencies from.</param>
     /// <returns>List of term frequency dictionaries, where each dictionary represents a document and contains terms as keys and their frequencies as values.</returns>
-    protected virtual List<Dictionary<string, int>> ExtractTermFrequency(IEnumerable<string> documents)
+    protected virtual IList<Dictionary<string, int>> ExtractTermFrequency(IEnumerable<string> documents)
     {
         return documents
             .AsParallel()
@@ -121,7 +121,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     {
         int newTermId = Vocabulary.Count + 1;
 
-        foreach (var termFrequency in documentTermFrequency)
+        foreach (var termFrequency in documentTermFrequency ?? [])
         {
             foreach (var term in termFrequency)
             {
@@ -143,7 +143,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// </summary>
     /// <param name="documentTermFrequency">Collection of term frequencies to transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>
-    protected virtual List<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    protected virtual IList<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
 
@@ -151,7 +151,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
             .AsParallel()
             .Select(termFrequency =>
             {
-                Dictionary<int, float> sparseVector = new();
+                Dictionary<int, float> sparseVector = [];
 
                 foreach (var tf in termFrequency)
                 {
@@ -177,7 +177,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     protected static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
     {
         return languages is []
-            ? new HashSet<string>()
+            ? []
             : languages.SelectMany(
                     language => StopWords.GetStopWords(language.GetShortCode())
                     .Select(x => toLowercase ? x.ToLowerInvariant() : x))

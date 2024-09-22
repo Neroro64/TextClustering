@@ -2,8 +2,8 @@ using BenchmarkDotNet.Running;
 
 namespace TextClustering.Benchmark;
 
-public class Program
+internal sealed class Program
 {
-    static void Main(string[] args) => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+    internal static void Main(string[] args) => BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
 }
 

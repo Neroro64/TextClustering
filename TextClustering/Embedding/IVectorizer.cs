@@ -3,8 +3,9 @@ using System.Collections.ObjectModel;
 namespace TextClustering.Embedding;
 
 /// <summary>
-///     Interface for Vectorizer, providing methods to fit and transform documents into vectors of type <see cref="TVector"/> .
+///     Interface for Vectorizer, providing methods to fit and transform documents into vectors of type <typeparamref name="TVector"/> .
 /// </summary>
+/// <typeparam name="TVector">The type of vector used to represent documents.</typeparam>
 public interface IVectorizer<TVector>
 {
     /// <summary>
@@ -20,7 +21,7 @@ public interface IVectorizer<TVector>
     void Fit(IEnumerable<string> documents);
 
     /// <summary>
-    ///     Transforms a collection of text documents into vectors of type <see cref="TVector" />.
+    ///     Transforms a collection of text documents into vectors of type <typeparamref name="TVector" />.
     /// </summary>
     /// <param name="documents">Collection of text documents to transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>
@@ -28,7 +29,7 @@ public interface IVectorizer<TVector>
 
     /// <summary>
     ///     Fits the vectorizer to a collection of documents by extracting term frequencies from each document
-    ///     and updating the vocabulary accordingly, then transforms the same documents into vectors of type <see cref="TVector" />.
+    ///     and updating the vocabulary accordingly, then transforms the same documents into vectors of type <typeparamref name="TVector" />.
     /// </summary>
     /// <param name="documents">Collection of text documents to fit and transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>

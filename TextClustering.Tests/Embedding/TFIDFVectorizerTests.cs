@@ -69,10 +69,10 @@ public class TFIDFVectorizerTests
 
         // Act
         vectorizer.Fit(docs1);
-        var result1 = vectorizer.Transform(new List<string> { "apple banana" }).FirstOrDefault();
+        var result1 = vectorizer.Transform(["apple banana"]).FirstOrDefault();
 
         vectorizer.Fit(docs2);
-        var result2 = vectorizer.Transform(new List<string> { "banana cherry" }).FirstOrDefault();
+        var result2 = vectorizer.Transform(["banana cherry"]).FirstOrDefault();
 
         // Assert
         Assert.IsNotNull(result1);
