@@ -1,9 +1,11 @@
+using System.Collections.ObjectModel;
+
 namespace TextClustering.Embedding;
 
 /// <summary>
-///     Interface for Vectorizer, providing methods to fit and transform documents into vectors.
+///     Interface for Vectorizer, providing methods to fit and transform documents into vectors of type <see cref="TVector"/> .
 /// </summary>
-public interface IVectorizer
+public interface IVectorizer<TVector>
 {
     /// <summary>
     ///     Resets the vectorizer to its initial state, clearing the vocabulary and total document count.
@@ -18,17 +20,17 @@ public interface IVectorizer
     void Fit(IEnumerable<string> documents);
 
     /// <summary>
-    ///     Transforms a collection of text documents into sparse vectors.
+    ///     Transforms a collection of text documents into vectors of type <see cref="TVector" />.
     /// </summary>
     /// <param name="documents">Collection of text documents to transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>
-    Dictionary<int, float>[] Transform(IEnumerable<string> documents);
+    ReadOnlyCollection<TVector> Transform(IEnumerable<string> documents);
 
     /// <summary>
     ///     Fits the vectorizer to a collection of documents by extracting term frequencies from each document
-    ///     and updating the vocabulary accordingly, then transforms the same documents into sparse vectors.
+    ///     and updating the vocabulary accordingly, then transforms the same documents into vectors of type <see cref="TVector" />.
     /// </summary>
     /// <param name="documents">Collection of text documents to fit and transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>
-    Dictionary<int, float>[] FitThenTransform(IEnumerable<string> documents);
+    ReadOnlyCollection<TVector> FitThenTransform(IEnumerable<string> documents);
 }

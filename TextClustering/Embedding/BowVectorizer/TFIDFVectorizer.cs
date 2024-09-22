@@ -1,7 +1,5 @@
 namespace TextClustering.Embedding.BoWVectorizer;
 
-using TermFrequency = Dictionary<string, int>;
-
 /// <summary>
 ///     TF-IDF Vectorizer class that inherits from CountVectorizer, responsible for transforming term frequencies into TF-IDF vectors.
 /// </summary>
@@ -9,7 +7,7 @@ using TermFrequency = Dictionary<string, int>;
 public sealed class TFIDFVectorizer(BoWVectorizerConfig config) : CountVectorizer(config)
 {
     /// <inheritdoc/>
-    protected override Dictionary<int, float>[] ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
+    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
@@ -30,7 +28,7 @@ public sealed class TFIDFVectorizer(BoWVectorizerConfig config) : CountVectorize
                 }
                 return sparseVector;
             })
-            .ToArray();
+            .ToList();
     }
 
     /// <summary>

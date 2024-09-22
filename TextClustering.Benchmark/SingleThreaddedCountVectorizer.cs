@@ -14,7 +14,7 @@ public sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) :
             .ToList();
     }
 
-    protected override Dictionary<int, float>[] ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
+    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<TermFrequency> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
@@ -32,6 +32,6 @@ public sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config) :
                 }
                 return sparseVector;
             })
-            .ToArray();
+            .ToList();
     }
 }

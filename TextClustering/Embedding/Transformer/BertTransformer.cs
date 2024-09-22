@@ -1,10 +1,12 @@
+using System.Collections.ObjectModel;
+
 using FastBertTokenizer;
 
 using Microsoft.ML.OnnxRuntime;
 
 namespace TextClustering.Embedding.Transformer;
 
-public sealed class BertTransformer : IVectorizer, IDisposable
+public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 {
     public BertTokenizer Tokenizer { get; init; } = new BertTokenizer();
 
@@ -61,12 +63,12 @@ public sealed class BertTransformer : IVectorizer, IDisposable
 
     public void Fit(IEnumerable<string> documents) { }
 
-    public Dictionary<int, float>[] Transform(IEnumerable<string> documents)
+    public ReadOnlyCollection<float[]> Transform(IEnumerable<string> documents)
     {
         throw new NotImplementedException();
     }
 
-    public Dictionary<int, float>[] FitThenTransform(IEnumerable<string> documents)
+    public ReadOnlyCollection<float[]> FitThenTransform(IEnumerable<string> documents)
     {
         throw new NotImplementedException();
     }
