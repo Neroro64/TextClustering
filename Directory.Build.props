@@ -1,57 +1,57 @@
 <Project>
-  <PropertyGroup>
-    <!-- Target the latest .NET version -->
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <PropertyGroup>
+        <!-- Target the latest .NET version -->
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
 
-    <!-- Enable strict mode for the Roslyn compiler -->
-    <Features>strict</Features>
+        <!-- Enable strict mode for the Roslyn compiler -->
+        <Features>strict</Features>
 
-    <!-- Enable nullable reference types and treat warnings as errors -->
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Recommended</AnalysisMode>
+        <!-- Enable nullable reference types and treat warnings as errors -->
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AnalysisMode>Recommended</AnalysisMode>
 
-    <!-- Enable .NET analyzers and enforce code style in build -->
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>All</AnalysisMode>
+        <!-- Enable .NET analyzers and enforce code style in build -->
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>All</AnalysisMode>
 
-    <!-- Manage package versions centrally -->
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <!-- Manage package versions centrally -->
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <!-- Enable documentation file generation -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- Enable documentation file generation -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!-- Disable XML documentation warnings -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <!-- Disable XML documentation warnings -->
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
 
-    <!-- Disable warnings about preferring upper case normalization -->
-    <NoWarn>$(NoWarn);CA1304</NoWarn>
-    <NoWarn>$(NoWarn);CA1308</NoWarn>
+        <!-- Disable warnings about preferring upper case normalization -->
+        <NoWarn>$(NoWarn);CA1304</NoWarn>
+        <NoWarn>$(NoWarn);CA1308</NoWarn>
 
-    <!-- Disable warnings about Identifiers should not contain underscores -->
-    <NoWarn>$(NoWarn);CA1707</NoWarn>
+        <!-- Disable warnings about Identifiers should not contain underscores -->
+        <NoWarn>$(NoWarn);CA1707</NoWarn>
 
-    <!-- Disable warnings about properties should not return array -->
-    <NoWarn>$(NoWarn);CA1819</NoWarn>
+        <!-- Disable warnings about properties should not return array -->
+        <NoWarn>$(NoWarn);CA1819</NoWarn>
 
-    <!-- Disable warnings about using cryptographically secure random generator -->
-    <NoWarn>$(NoWarn);CA5394</NoWarn>
+        <!-- Disable warnings about using cryptographically secure random generator -->
+        <NoWarn>$(NoWarn);CA5394</NoWarn>
 
-    <!-- Disable warnings about setting types to internal visbility -->
-    <NoWarn>$(NoWarn);CA1515</NoWarn>
+        <!-- Disable warnings about setting types to internal visbility -->
+        <NoWarn>$(NoWarn);CA1515</NoWarn>
 
-    <!-- Disable warnings about preferring block body for methods -->
-    <NoWarn>$(NoWarn);IDE0022</NoWarn>
+        <!-- Disable warnings about preferring block body for methods -->
+        <NoWarn>$(NoWarn);IDE0022</NoWarn>
 
-    <!-- Disable warnings about using GeneratedRegexAttribute. -->
-   <NoWarn>$(NoWarn);SYSLIB1045</NoWarn>
+        <!-- Disable warnings about using GeneratedRegexAttribute. -->
+        <NoWarn>$(NoWarn);SYSLIB1045</NoWarn>
 
-    <!-- Additional metadata for the project -->
-    <Authors>Nuo Chen</Authors>
-  </PropertyGroup>
+        <!-- Additional metadata for the project -->
+        <Authors>Nuo Chen</Authors>
+    </PropertyGroup>
 </Project>

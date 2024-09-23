@@ -1,4 +1,4 @@
-namespace TextClustering.Embedding.BoWVectorizer;
+namespace Embedding.BowVectorizer;
 
 public record TermStats
 {

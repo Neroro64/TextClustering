@@ -1,25 +1,24 @@
-#pragma warning disable CS0649, CA1812
 using System.Text;
 
 using BenchmarkDotNet.Attributes;
 
-using TextClustering.Embedding.BoWVectorizer;
+using Embedding.BowVectorizer;
 
 namespace TextClustering.Benchmark;
 
 [RPlotExporter]
-internal sealed class CountVectorizerBenchmark
+public class CountVectorizerBenchmark
 {
-    internal List<string> Documents { get; init; } = [];
+    private List<string> Documents { get; init; } = [];
 
-    private readonly CountVectorizer multiThreaddedVectorizer = new(new() { Languages = [] });
-    private readonly SingleThreaddedCountVectorizer singleThreaddedVectorizer = new(new() { Languages = [] });
+    private readonly CountVectorizer _multiThreaddedVectorizer = new(new() { Languages = [] });
+    private readonly SingleThreaddedCountVectorizer _singleThreaddedVectorizer = new(new() { Languages = [] });
 
     [Params(10, 100, 1_000, 10_000, 100_000)]
-    internal int DatasetSize;
+    public int DatasetSize;
 
     [GlobalSetup]
-    internal void Setup()
+    public void Setup()
     {
         var random = new Random();
         for (int i = 0; i < DatasetSize; ++i)
@@ -43,14 +42,14 @@ internal sealed class CountVectorizerBenchmark
     }
 
     [Benchmark]
-    internal void SingleThreaddedVectorize()
+    public void SingleThreaddedVectorize()
     {
-        _ = singleThreaddedVectorizer.FitThenTransform(Documents).ToList();
+        _ = _singleThreaddedVectorizer.FitThenTransform(Documents).ToList();
     }
 
     [Benchmark]
-    internal void MultiThreaddedVectorize()
+    public void MultiThreaddedVectorize()
     {
-        _ = multiThreaddedVectorizer.FitThenTransform(Documents).ToList();
+        _ = _multiThreaddedVectorizer.FitThenTransform(Documents).ToList();
     }
 }

@@ -1,4 +1,4 @@
-namespace TextClustering.Embedding.BoWVectorizer;
+namespace Embedding.BowVectorizer;
 
 /// <summary>
 ///     Configuration for a Bag-of-Words vectorizer.

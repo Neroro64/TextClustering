@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextClustering", "TextClustering", "{624F78FC-338F-440A-9799-974B345D7430}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Embedding", "TextClustering\Embedding\Embedding.csproj", "{3CBF2B18-6A45-4018-A80F-00C98EC834BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClustering.Tests", "TextClustering.Tests\TextClustering.Tests.csproj", "{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}"
@@ -34,6 +32,5 @@ Global
 		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{3CBF2B18-6A45-4018-A80F-00C98EC834BA} = {624F78FC-338F-440A-9799-974B345D7430}
 	EndGlobalSection
 EndGlobal

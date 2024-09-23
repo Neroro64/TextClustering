@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace TextClustering.Embedding;
+namespace Embedding;
 
 /// <summary>
 ///     Interface for Vectorizer, providing methods to fit and transform documents into vectors of type <typeparamref name="TVector"/> .

@@ -1,10 +1,9 @@
 using System.Collections.ObjectModel;
-
 using System.Text.RegularExpressions;
 
 using StopWord;
 
-namespace TextClustering.Embedding.BoWVectorizer;
+namespace Embedding.BowVectorizer;
 
 /// <summary>
 ///     A vectorizer that converts text documents into sparse vectors by counting the occurrences of each word.
@@ -23,12 +22,12 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// <summary>
     ///     Regular expression used to split text documents into words.
     /// </summary>
-    protected Regex WordSeparatorRegex { get; } = BuildSeparatorRegexPattern(config.WordSeparator);
+    private Regex WordSeparatorRegex { get; } = BuildSeparatorRegexPattern(config.WordSeparator);
 
     /// <summary>
     ///     Set of stop words that will be ignored during the vocabulary building.
     /// </summary>
-    protected HashSet<string> StopWord { get; } = GetStopWordSet(config.Languages, config.Lowercase);
+    private HashSet<string> StopWord { get; } = GetStopWordSet(config.Languages, config.Lowercase);
 
     /// <summary>
     ///     Vocabulary containing all unique terms found in the documents along with their term statistics.
@@ -38,7 +37,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// <summary>
     ///     Total number of documents.
     /// </summary>
-    public long TotalDocumentCount { get; protected set; }
+    protected long TotalDocumentCount { get; private set; }
 
     /// <inheritdoc/>
     public void Reset()
@@ -93,7 +92,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     protected Dictionary<string, int> ExtractTermFrequency(string document)
     {
         var termFrequency = new Dictionary<string, int>();
-        var words = WordSeparatorRegex.Split(document).Where(word => !string.IsNullOrWhiteSpace(word));
+        var words = WordSeparatorRegex.Split(document).Where(static word => !string.IsNullOrWhiteSpace(word));
 
         foreach (string word in words)
         {
@@ -117,11 +116,11 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     ///     Updates the vocabulary by incorporating new terms and incrementing the document counts for existing terms.
     /// </summary>
     /// <param name="documentTermFrequency">Collection of term frequencies from documents to update the vocabulary with.</param>
-    protected void UpdateVocabulary(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    private void UpdateVocabulary(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int newTermId = Vocabulary.Count + 1;
 
-        foreach (var termFrequency in documentTermFrequency ?? [])
+        foreach (var termFrequency in documentTermFrequency)
         {
             foreach (var term in termFrequency)
             {
@@ -155,7 +154,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
 
                 foreach (var tf in termFrequency)
                 {
-                    if (!Vocabulary.TryGetValue(tf.Key, out var value) || value?.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
+                    if (!Vocabulary.TryGetValue(tf.Key, out var value) || value.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
                     {
                         continue;
                     }
@@ -174,7 +173,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// <param name="languages">Collection of languages to retrieve stop words for.</param>
     /// <param name="toLowercase">Flag indicating whether stop words should be converted to lowercase.</param>
     /// <returns>Set of stop words for the specified languages, possibly in lowercase.</returns>
-    protected static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
+    private static HashSet<string> GetStopWordSet(Language[] languages, bool toLowercase)
     {
         return languages is []
             ? []
@@ -189,7 +188,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// </summary>
     /// <param name="separators">Collection of word separators.</param>
     /// <returns>Regular expression pattern that matches word separators.</returns>
-    protected static Regex BuildSeparatorRegexPattern(char[] separators)
+    private static Regex BuildSeparatorRegexPattern(char[] separators)
     {
         return separators is []
             ? new Regex(@"[^a-zA-Z0-9]", RegexOptions.CultureInvariant)

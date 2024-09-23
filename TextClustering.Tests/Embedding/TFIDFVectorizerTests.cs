@@ -1,15 +1,15 @@
-using TextClustering.Embedding.BoWVectorizer;
+using Embedding.BowVectorizer;
 
 namespace TextClustering.Tests.Embedding;
 
 [TestClass]
-public class TFIDFVectorizerTests
+public class TfidfVectorizerTests
 {
     [TestMethod]
     public void Transform_SingleString()
     {
         // Arrange
-        var vectorizer = new TFIDFVectorizer(new() { Languages = [] });
+        var vectorizer = new TfidfVectorizer(new() { Languages = [] });
 
         // Act
         var embeddings = vectorizer.FitThenTransform(["hello world"]).FirstOrDefault();
@@ -24,7 +24,7 @@ public class TFIDFVectorizerTests
     public void FitThenTransform_EmptyInput_ReturnsEmptyOutput()
     {
         // Arrange
-        var vectorizer = new TFIDFVectorizer(new() { Languages = [] });
+        var vectorizer = new TfidfVectorizer(new() { Languages = [] });
         var documents = new List<string>();
 
         // Act
@@ -39,7 +39,7 @@ public class TFIDFVectorizerTests
     public void Transform_AfterFit_ReturnsConsistentVectors()
     {
         // Arrange
-        var vectorizer = new TFIDFVectorizer(new() { Languages = [] });
+        var vectorizer = new TfidfVectorizer(new() { Languages = [] });
         var trainingDocs = new List<string> { "apple banana", "banana cherry", "cherry date" };
         var testDocs = new List<string> { "apple banana", "cherry date" };
 
@@ -51,19 +51,19 @@ public class TFIDFVectorizerTests
         Assert.AreEqual(2, result.Count, "Expected 2 vectors in the output");
 
         Assert.IsTrue(result[0].ContainsKey(1) && result[0].ContainsKey(2), "'First vector should contain indices for 'apple' and 'banana'");
-        Assert.AreEqual(TFIDFVectorizer.ComputeTFIDF(1, trainingDocs.Count, 1), result[0][1], 1e-6, "TDIDF value for 'apple' does not match expected value.");
-        Assert.AreEqual(TFIDFVectorizer.ComputeTFIDF(1, trainingDocs.Count, 2), result[0][2], 1e-6, "TDIDF value for 'banana' does not match expected value.");
+        Assert.AreEqual(TfidfVectorizer.ComputeTfidf(1, trainingDocs.Count, 1), result[0][1], 1e-6, "TDIDF value for 'apple' does not match expected value.");
+        Assert.AreEqual(TfidfVectorizer.ComputeTfidf(1, trainingDocs.Count, 2), result[0][2], 1e-6, "TDIDF value for 'banana' does not match expected value.");
 
         Assert.IsTrue(result[1].ContainsKey(3) && result[1].ContainsKey(4), "'First vector should contain indices for 'cherry' and 'date'");
-        Assert.AreEqual(TFIDFVectorizer.ComputeTFIDF(1, trainingDocs.Count, 2), result[1][3], "TDIDF value for 'cherry' does not match expected value.");
-        Assert.AreEqual(TFIDFVectorizer.ComputeTFIDF(1, trainingDocs.Count, 1), result[1][4], "TDIDF value for 'date' does not match expected value.");
+        Assert.AreEqual(TfidfVectorizer.ComputeTfidf(1, trainingDocs.Count, 2), result[1][3], "TDIDF value for 'cherry' does not match expected value.");
+        Assert.AreEqual(TfidfVectorizer.ComputeTfidf(1, trainingDocs.Count, 1), result[1][4], "TDIDF value for 'date' does not match expected value.");
     }
 
     [TestMethod]
     public void Fit_MultipleCalls_UpdatesVocabulary()
     {
         // Arrange
-        var vectorizer = new TFIDFVectorizer(new() { Languages = [] });
+        var vectorizer = new TfidfVectorizer(new() { Languages = [] });
         var docs1 = new List<string> { "apple banana", "date" };
         var docs2 = new List<string> { "banana cherry" };
 

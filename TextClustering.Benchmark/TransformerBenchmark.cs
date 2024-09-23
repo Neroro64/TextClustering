@@ -1,24 +1,23 @@
-#pragma warning disable CS0649, CA1812
 using System.Text;
 
 using BenchmarkDotNet.Attributes;
 
-using TextClustering.Embedding.Transformer;
+using Embedding.Transformer;
 
 namespace TextClustering.Benchmark;
 
 [RPlotExporter]
-internal sealed class TransformerBenchmark : IDisposable
+public class TransformerBenchmark : IDisposable
 {
-    internal List<string> Documents { get; init; } = [];
+    private List<string> Documents { get; init; } = [];
 
-    private readonly BertTransformer transformer = new();
+    private readonly BertTransformer _transformer = new();
 
     [Params(10, 100, 1_000)]
-    internal int DatasetSize;
+    public int DatasetSize;
 
     [GlobalSetup]
-    internal void Setup()
+    public void Setup()
     {
         var random = new Random();
         for (int i = 0; i < DatasetSize; ++i)
@@ -42,14 +41,14 @@ internal sealed class TransformerBenchmark : IDisposable
     }
 
     [Benchmark]
-    internal void Transform()
+    public void Transform()
     {
-        _ = transformer.Transform(Documents);
+        _ = _transformer.Transform(Documents);
     }
 
     public void Dispose()
     {
-        transformer.Dispose();
+        _transformer.Dispose();
         GC.SuppressFinalize(this);
     }
 }

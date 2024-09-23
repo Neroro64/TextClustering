@@ -1,6 +1,6 @@
 using System.Text;
 
-using TextClustering.Embedding.Transformer;
+using Embedding.Transformer;
 
 namespace TextClustering.Tests.Embedding;
 
@@ -58,10 +58,10 @@ public class BertTransformerTests
         using var transformer = new BertTransformer();
 
         // Act
-        var embeddings = transformer.Transform(_testDocuments);
+        var embeddings = transformer.Transform(TestDocuments);
 
         // Assert
-        Assert.AreEqual(_testDocuments.Length, embeddings.Count);
+        Assert.AreEqual(TestDocuments.Length, embeddings.Count);
         float similarityBetweenDoc1And2 = ComputeCosineSimilary(embeddings[0], embeddings[1]);
         float similarityBetweenDoc1And3 = ComputeCosineSimilary(embeddings[0], embeddings[2]);
         Assert.IsTrue(similarityBetweenDoc1And2 < similarityBetweenDoc1And3);
@@ -76,7 +76,7 @@ public class BertTransformerTests
         var testDocuments = new List<string>();
         for (int i = 0; i < documentCount; ++i)
         {
-            testDocuments.Add(_testDocuments[i % 3]);
+            testDocuments.Add(TestDocuments[i % 3]);
         }
 
         // Act
@@ -89,7 +89,7 @@ public class BertTransformerTests
         Assert.AreEqual(embeddings[2].Sum(), embeddings[5].Sum(), 1e-6);
     }
 
-    private static readonly string[] _testDocuments = [
+    private static readonly string[] TestDocuments = [
         "This is a sample document.",
         "The quick brown fox jumps over the lazy dog.",
         "Another sample document for testing purposes.",

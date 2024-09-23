@@ -6,26 +6,26 @@ using FastBertTokenizer;
 
 using Microsoft.ML.OnnxRuntime;
 
-namespace TextClustering.Embedding.Transformer;
+namespace Embedding.Transformer;
 
 /// <summary>
 ///   A BERT-based transformer that converts input documents into embeddings using pre-trained models.
-///   By default, it uses the pretrained 'sentence-transformers/all-MiniLM-L6-v2'.
+///   By default, it uses the pre-trained 'sentence-transformers/all-MiniLM-L6-v2'.
 /// </summary>
 public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 {
     /// <summary>
     ///   The BertTokenizer is used to tokenize input texts into token IDs and attention masks that can be processed by the transformer model.
     /// </summary>
-    public BertTokenizer Tokenizer { get; init; } = new BertTokenizer();
+    private BertTokenizer Tokenizer { get; } = new();
 
     /// <summary>
     /// A buffer to store embedding outputs.
     /// </summary>
     private readonly float[] _outputBuffer;
 
-    private const string _defaultTokenizerJsonPath = "Transformer/PretrainedModel/tokenizer.json";
-    private const string _defaultOnnxModelPath = "Transformer/PretrainedModel/all-MiniLM-L6-v2.onnx";
+    private const string DefaultTokenizerJsonPath = "Transformer/PretrainedModel/tokenizer.json";
+    private const string DefaultOnnxModelPath = "Transformer/PretrainedModel/all-MiniLM-L6-v2.onnx";
 
     private readonly BertTransformerSettings _settings;
     private readonly SessionOptions _sessionOptions;
@@ -47,15 +47,27 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
         _settings = settings ?? new BertTransformerSettings();
 
         // Load the tokenizer
-        using var tokenizerConfigStream = new FileStream(tokenizerJsonPath ?? _defaultTokenizerJsonPath, FileMode.Open, FileAccess.Read);
+        using var tokenizerConfigStream = new FileStream(tokenizerJsonPath ?? DefaultTokenizerJsonPath, FileMode.Open, FileAccess.Read);
         Tokenizer.LoadTokenizerJson(tokenizerConfigStream);
 
-        // Intialize the InferenceSession and set logging level to fatal.
-        _sessionOptions = _settings.UseCuda
-            ? SessionOptions.MakeSessionOptionWithCudaProvider(0)
-            : new SessionOptions();
+        // Initialize the InferenceSession and set logging level to fatal.
+        switch (_settings.RuntimeExecutionProvider)
+        {
+            case OnnxRuntimeExecutionProvider.CUDA:
+                _sessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider();
+                break;
+            case OnnxRuntimeExecutionProvider.DirectML:
+                _sessionOptions = new SessionOptions();
+                _sessionOptions.AppendExecutionProvider_DML();
+                break;
+            case OnnxRuntimeExecutionProvider.CPU:
+            default:
+                _sessionOptions = new SessionOptions();
+                break;
+        }
+
         _sessionOptions.LogSeverityLevel = OrtLoggingLevel.ORT_LOGGING_LEVEL_FATAL;
-        _session = new InferenceSession(onnxModelPath ?? _defaultOnnxModelPath, _sessionOptions);
+        _session = new InferenceSession(onnxModelPath ?? DefaultOnnxModelPath, _sessionOptions);
 
         // Initialize the output buffer for storing embedding outputs.
         _outputBuffer = new float[_settings.BatchSize * _settings.EmbeddingDimension];
@@ -63,7 +75,6 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         _sessionOptions.Dispose();
         _session.Dispose();
     }
@@ -85,26 +96,26 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
         // Get the model parameters. 
         string[] inputLayerNames = _settings.ModelInputLayerNames;
         int batchSize = _settings.BatchSize;
-        int inputDimention = _settings.InputDimension;
+        int inputDimension = _settings.InputDimension;
         string[] outputLayerNames = _settings.ModelOutputLayerNames;
-        int outputDimention = _settings.EmbeddingDimension;
+        int outputDimension = _settings.EmbeddingDimension;
 
         using var runOptions = new RunOptions();
-        using var output = OrtValue.CreateTensorValueFromMemory<float>(OrtMemoryInfo.DefaultInstance, _outputBuffer, [batchSize, outputDimention]);
+        using var output = OrtValue.CreateTensorValueFromMemory<float>(OrtMemoryInfo.DefaultInstance, _outputBuffer, [batchSize, outputDimension]);
 
         int documentCount = 0;
         List<float[]> embeddings = [];
         foreach (var batch in Tokenizer.CreateBatchEnumerator(
-            sourceEnumerable: documents.Select(doc => (documentCount++, doc)),
-            tokensPerInput: _settings.InputDimension,
-            batchSize: batchSize,
-            stride: _settings.StrideSize))
+                     sourceEnumerable: documents.Select(doc => (documentCount++, doc)),
+                     tokensPerInput: _settings.InputDimension,
+                     batchSize: batchSize,
+                     stride: _settings.StrideSize))
         {
             var inputIds = batch.InputIds;
             var attentionMask = batch.AttentionMask;
 
-            using var inputIdTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, inputIds, [batchSize, inputDimention]);
-            using var attentionMaskTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, attentionMask, [batchSize, inputDimention]);
+            using var inputIdTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, inputIds, [batchSize, inputDimension]);
+            using var attentionMaskTensor = OrtValue.CreateTensorValueFromMemory(OrtMemoryInfo.DefaultInstance, attentionMask, [batchSize, inputDimension]);
 
             // Inference
             _session.Run(
@@ -121,7 +132,7 @@ public sealed class BertTransformer : IVectorizer<float[]>, IDisposable
             {
                 embeddings.Add(output
                     .GetTensorDataAsSpan<float>()
-                    .Slice(i * outputDimention, outputDimention)
+                    .Slice(i * outputDimension, outputDimension)
                     .ToArray());
             }
         }

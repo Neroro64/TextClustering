@@ -1,4 +1,4 @@
-using TextClustering.Embedding.BoWVectorizer;
+using Embedding.BowVectorizer;
 
 namespace TextClustering.Tests.Embedding;
 
@@ -41,10 +41,9 @@ public class CountVectorizerTests
     {
         // Arrange
         var vectorizer = new CountVectorizer(new() { Languages = [] });
-        var documents = new List<string>();
 
         // Act
-        var result = vectorizer.FitThenTransform(documents).FirstOrDefault();
+        var result = vectorizer.FitThenTransform([]).FirstOrDefault();
 
         // Assert
         Assert.AreEqual(0, vectorizer.Vocabulary.Count);

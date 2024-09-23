@@ -1,4 +1,4 @@
-using TextClustering.Embedding.BoWVectorizer;
+using Embedding.BowVectorizer;
 
 namespace TextClustering.Benchmark;
 
@@ -22,7 +22,7 @@ internal sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config)
                 foreach (var tf in termFrequency)
                 {
                     if (!Vocabulary.TryGetValue(tf.Key, out var value)
-                        || value?.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
+                        || value.NumberOfDocumentsWhereTheTermAppears <= maxDocumentFrequency)
                     {
                         continue;
                     }

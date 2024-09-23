@@ -1,4 +1,4 @@
-namespace TextClustering.Embedding;
+namespace Embedding;
 
 public enum Language
 {
