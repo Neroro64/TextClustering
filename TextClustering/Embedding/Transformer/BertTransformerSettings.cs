@@ -9,7 +9,7 @@ namespace Embedding.Transformer;
 /// <param name="BatchSize">The batch size for inference.</param>
 /// <param name="StrideSize">The stride size for inference batching.</param>
 public record BertTransformerSettings(
-    OnnxRuntimeExecutionProvider RuntimeExecutionProvider = OnnxRuntimeExecutionProvider.DirectML,
+    OnnxRuntimeExecutionProvider RuntimeExecutionProvider = OnnxRuntimeExecutionProvider.CPU,
     int InputDimension = 256,
     int EmbeddingDimension = 384,
     int BatchSize = 32,
