@@ -77,7 +77,7 @@ public class TfidfVectorizerTests
         // Assert
         Assert.IsNotNull(result1);
         Assert.IsNotNull(result2);
-        Assert.AreEqual(2, result1.Count);
+        Assert.AreEqual(2, result1.Length);
         Assert.IsTrue(result2.ContainsKey(2) && result2.ContainsKey(4), "Both 'banana' and 'cherry' should be in vocabulary after second fit");
         Assert.IsTrue(result2[2] < result1[2], "TDIDF value for 'banana' decreased after seeing it in another document.");
     }

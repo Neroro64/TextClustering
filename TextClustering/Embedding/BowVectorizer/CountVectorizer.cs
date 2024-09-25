@@ -12,7 +12,7 @@ namespace Embedding.BowVectorizer;
 ///     This class is designed to be used in natural language processing (NLP) tasks, such as clustering or classification,
 ///     where text data needs to be transformed into a format that can be processed by machine learning algorithms.
 /// </remarks>
-public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionary<int, float>>
+public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<SparseVector>
 {
     /// <summary>
     ///     Gets the configuration for this vectorizer.
@@ -55,14 +55,14 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     }
 
     /// <inheritdoc/>
-    public ReadOnlyCollection<Dictionary<int, float>> Transform(IEnumerable<string> documents)
+    public ReadOnlyCollection<SparseVector> Transform(IEnumerable<string> documents)
     {
         var documentTermFrequency = ExtractTermFrequency(documents);
         return new(ToSparseVector(documentTermFrequency));
     }
 
     /// <inheritdoc/>
-    public ReadOnlyCollection<Dictionary<int, float>> FitThenTransform(IEnumerable<string> documents)
+    public ReadOnlyCollection<SparseVector> FitThenTransform(IEnumerable<string> documents)
     {
         var documentTermFrequency = ExtractTermFrequency(documents);
         UpdateVocabulary(documentTermFrequency);
@@ -142,7 +142,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
     /// </summary>
     /// <param name="documentTermFrequency">Collection of term frequencies to transform.</param>
     /// <returns>Array of sparse vectors, where each vector represents a document and contains term IDs as keys and term frequencies as values.</returns>
-    protected virtual IList<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    protected virtual IList<SparseVector> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
 
@@ -162,7 +162,7 @@ public class CountVectorizer(BoWVectorizerConfig config) : IVectorizer<Dictionar
                     sparseVector.Add(Vocabulary[tf.Key].Id, tf.Value);
                 }
 
-                return sparseVector;
+                return new SparseVector(sparseVector);
             })
             .ToList();
     }

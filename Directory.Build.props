@@ -45,11 +45,15 @@
         <!-- Disable warnings about setting types to internal visbility -->
         <NoWarn>$(NoWarn);CA1515</NoWarn>
 
+        <!-- Disable warnings about validating arguments of public methods -->
+        <NoWarn>$(NoWarn);CA1062</NoWarn>
+
         <!-- Disable warnings about preferring block body for methods -->
         <NoWarn>$(NoWarn);IDE0022</NoWarn>
 
         <!-- Disable warnings about using GeneratedRegexAttribute. -->
         <NoWarn>$(NoWarn);SYSLIB1045</NoWarn>
+
 
         <!-- Additional metadata for the project -->
         <Authors>Nuo Chen</Authors>

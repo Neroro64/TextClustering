@@ -7,7 +7,7 @@ namespace Embedding.BowVectorizer;
 public sealed class TfidfVectorizer(BoWVectorizerConfig config) : CountVectorizer(config)
 {
     /// <inheritdoc/>
-    protected override IList<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    protected override IList<SparseVector> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
@@ -26,7 +26,7 @@ public sealed class TfidfVectorizer(BoWVectorizerConfig config) : CountVectorize
                         Vocabulary[tf.Key].Id,
                         ComputeTfidf(tf.Value, TotalDocumentCount, value.NumberOfDocumentsWhereTheTermAppears));
                 }
-                return sparseVector;
+                return new SparseVector(sparseVector);
             })
             .ToList();
     }

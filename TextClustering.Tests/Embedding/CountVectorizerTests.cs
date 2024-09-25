@@ -86,7 +86,7 @@ public class CountVectorizerTests
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Count, "'result' should be an empty vector when Transform is called before Fit.");
+        Assert.AreEqual(0, result.Length, "'result' should be an empty vector when Transform is called before Fit.");
     }
 
     [TestMethod]
@@ -103,7 +103,7 @@ public class CountVectorizerTests
         // Assert
         Assert.AreEqual(4, vectorizer.Vocabulary.Count, "Expected vocabulary size to increase after handling unseen words");
         Assert.IsNotNull(vector);
-        Assert.AreEqual(1, vector.Count, "'vector' should have one entry for 'apple'");
+        Assert.AreEqual(1, vector.Length, "'vector' should have one entry for 'apple'");
         Assert.IsTrue(vector.ContainsKey(1), "'vector' does not contain index for 'apple'");
         Assert.AreEqual(1, vector[1], "'Count for 'apple' does not match expected value of 1.");
     }
@@ -126,7 +126,7 @@ public class CountVectorizerTests
         // Assert
         Assert.IsNotNull(result1);
         Assert.IsNotNull(result2);
-        Assert.AreEqual(1, result1.Count);
+        Assert.AreEqual(1, result1.Length);
         Assert.IsTrue(result2.ContainsKey(1) && result2.ContainsKey(3), "Both 'apple' and 'cherry' should be in vocabulary after second fit");
     }
 }

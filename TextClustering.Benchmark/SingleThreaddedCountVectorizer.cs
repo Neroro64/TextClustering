@@ -1,3 +1,4 @@
+using Embedding;
 using Embedding.BowVectorizer;
 
 namespace TextClustering.Benchmark;
@@ -12,7 +13,7 @@ internal sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config)
             .ToList();
     }
 
-    protected override List<Dictionary<int, float>> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
+    protected override List<SparseVector> ToSparseVector(IEnumerable<Dictionary<string, int>> documentTermFrequency)
     {
         int maxDocumentFrequency = (int)(TotalDocumentCount * Config.MaxDocumentPresence);
         return documentTermFrequency
@@ -28,7 +29,7 @@ internal sealed class SingleThreaddedCountVectorizer(BoWVectorizerConfig config)
                     }
                     sparseVector.Add(Vocabulary[tf.Key].Id, tf.Value);
                 }
-                return sparseVector;
+                return new SparseVector(sparseVector);
             })
             .ToList();
     }

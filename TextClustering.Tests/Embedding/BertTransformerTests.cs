@@ -14,7 +14,7 @@ public class BertTransformerTests
         using var transformer = new BertTransformer();
 
         // Act
-        float[]? embedding = transformer.Transform(["hello world"]).FirstOrDefault();
+        var embedding = transformer.Transform(["hello world"]).FirstOrDefault();
 
         // Assert
         Assert.IsNotNull(embedding);
@@ -62,8 +62,8 @@ public class BertTransformerTests
 
         // Assert
         Assert.AreEqual(TestDocuments.Length, embeddings.Count);
-        float similarityBetweenDoc1And2 = ComputeCosineSimilary(embeddings[0], embeddings[1]);
-        float similarityBetweenDoc1And3 = ComputeCosineSimilary(embeddings[0], embeddings[2]);
+        float similarityBetweenDoc1And2 = ComputeCosineSimilary(embeddings[0].Data, embeddings[1].Data);
+        float similarityBetweenDoc1And3 = ComputeCosineSimilary(embeddings[0].Data, embeddings[2].Data);
         Assert.IsTrue(similarityBetweenDoc1And2 < similarityBetweenDoc1And3);
     }
 
@@ -84,9 +84,9 @@ public class BertTransformerTests
 
         // Assert
         Assert.AreEqual(documentCount, embeddings.Count);
-        Assert.AreEqual(embeddings[0].Sum(), embeddings[3].Sum(), 1e-6);
-        Assert.AreEqual(embeddings[1].Sum(), embeddings[4].Sum(), 1e-6);
-        Assert.AreEqual(embeddings[2].Sum(), embeddings[5].Sum(), 1e-6);
+        Assert.AreEqual(embeddings[0].Data.Sum(), embeddings[3].Data.Sum(), 1e-6);
+        Assert.AreEqual(embeddings[1].Data.Sum(), embeddings[4].Data.Sum(), 1e-6);
+        Assert.AreEqual(embeddings[2].Data.Sum(), embeddings[5].Data.Sum(), 1e-6);
     }
 
     private static readonly string[] TestDocuments = [
