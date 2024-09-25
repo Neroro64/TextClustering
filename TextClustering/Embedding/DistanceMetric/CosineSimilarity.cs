@@ -26,8 +26,8 @@ public static class CosineSimilarity
         }
 
         // Calculate magnitudes
-        double magnitude1 = Math.Sqrt(vector1.Data.Sum(v => v * v));
-        double magnitude2 = Math.Sqrt(vector2.Data.Sum(v => v * v));
+        double magnitude1 = Math.Sqrt(vector1.Data.Sum(static v => v * v));
+        double magnitude2 = Math.Sqrt(vector2.Data.Sum(static v => v * v));
 
         // Calculate cosine similarity
         return (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
