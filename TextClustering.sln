@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -8,6 +8,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClustering.Tests", "TextClustering.Tests\TextClustering.Tests.csproj", "{9974ECEE-3FFF-409D-BB2A-9A2A4931B663}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextClustering.Benchmark", "TextClustering.Benchmark\TextClustering.Benchmark.csproj", "{D7FC25CA-E45A-4030-B870-83DD0A33FB30}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clustering", "TextClustering\Clustering\Clustering.csproj", "{BC31EC87-6A27-490A-A14C-E4B7DF42BD41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7FC25CA-E45A-4030-B870-83DD0A33FB30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC31EC87-6A27-490A-A14C-E4B7DF42BD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC31EC87-6A27-490A-A14C-E4B7DF42BD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC31EC87-6A27-490A-A14C-E4B7DF42BD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC31EC87-6A27-490A-A14C-E4B7DF42BD41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
