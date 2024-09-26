@@ -12,7 +12,7 @@ public interface IEmbeddingVector<TVector> : IEquatable<IEmbeddingVector<TVector
     /// <param name="other">The other vector to calculate the distance with.</param>
     /// <param name="calculateDistance">The function to calculate the distance between two vectors.</param>
     /// <returns>The calculated distance between the two vectors.</returns>
-    double DistanceTo(TVector other, Func<TVector, TVector, float> calculateDistance);
+    float DistanceTo(TVector other, Func<TVector, TVector, float> calculateDistance);
 
     /// <summary>
     /// Gets the length of this vector.
@@ -32,7 +32,7 @@ public record DenseVector(float[] Data) : IEmbeddingVector<DenseVector>
     private int _hashCode = -1;
 
     /// <inheritdoc />
-    public double DistanceTo(DenseVector other, Func<DenseVector, DenseVector, float> calculateDistance)
+    public float DistanceTo(DenseVector other, Func<DenseVector, DenseVector, float> calculateDistance)
     {
         return calculateDistance(this, other);
     }
@@ -76,7 +76,7 @@ public record SparseVector(Dictionary<int, float> Data) : IEmbeddingVector<Spars
     private int _hashCode = -1;
 
     /// <inheritdoc />
-    public double DistanceTo(SparseVector other, Func<SparseVector, SparseVector, float> calculateDistance)
+    public float DistanceTo(SparseVector other, Func<SparseVector, SparseVector, float> calculateDistance)
     {
         return calculateDistance(this, other);
     }

@@ -3,7 +3,7 @@ namespace Embedding.DistanceMetric;
 /// <summary>
 /// Provides static methods to calculate Euclidean distance between vectors.
 /// </summary>
-public static class EuclideanDistance
+public abstract class EuclideanDistance : IDistanceMetric<DenseVector>, IDistanceMetric<SparseVector>
 {
     /// <summary>
     /// Calculates the Euclidean distance between two dense vectors.

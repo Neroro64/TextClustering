@@ -3,7 +3,7 @@ namespace Embedding.DistanceMetric;
 /// <summary>
 /// Provides static methods to calculate Manhattan distance between vectors.
 /// </summary>
-public static class ManhattanDistance
+public abstract class ManhattanDistance : IDistanceMetric<DenseVector>, IDistanceMetric<SparseVector>
 {
     /// <summary>
     /// Calculates the Manhattan distance between two dense vectors.

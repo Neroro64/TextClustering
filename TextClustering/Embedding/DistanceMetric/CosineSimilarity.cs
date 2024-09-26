@@ -3,7 +3,7 @@ namespace Embedding.DistanceMetric;
 /// <summary>
 /// Provides static methods to calculate cosine similarity between vectors.
 /// </summary>
-public static class CosineSimilarity
+public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistanceMetric<SparseVector>
 {
     /// <summary>
     /// A small value used to prevent division by zero in calculations.
