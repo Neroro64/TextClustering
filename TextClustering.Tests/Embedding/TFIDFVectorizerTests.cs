@@ -25,6 +25,7 @@ public class TfidfVectorizerTests
     {
         // Arrange
         var vectorizer = new TfidfVectorizer(new() { Languages = [] });
+        // ReSharper disable once CollectionNeverUpdated.Local
         var documents = new List<string>();
 
         // Act

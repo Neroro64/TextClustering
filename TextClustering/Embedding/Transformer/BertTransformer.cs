@@ -46,14 +46,14 @@ public sealed class BertTransformer : IVectorizer<DenseVector>, IDisposable
         // Initialize the InferenceSession and set logging level to fatal.
         switch (_settings.RuntimeExecutionProvider)
         {
-            case OnnxRuntimeExecutionProvider.CUDA:
+            case OnnxRuntimeExecutionProvider.Cuda:
                 _sessionOptions = SessionOptions.MakeSessionOptionWithCudaProvider();
                 break;
-            case OnnxRuntimeExecutionProvider.DirectML:
+            case OnnxRuntimeExecutionProvider.DirectMl:
                 _sessionOptions = new SessionOptions();
                 _sessionOptions.AppendExecutionProvider_DML();
                 break;
-            case OnnxRuntimeExecutionProvider.CPU:
+            case OnnxRuntimeExecutionProvider.Cpu:
             default:
                 _sessionOptions = new SessionOptions();
                 break;

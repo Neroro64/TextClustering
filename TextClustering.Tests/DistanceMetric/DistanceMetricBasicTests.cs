@@ -157,8 +157,8 @@ public class DistanceMetricBasicTests
         var vector3 = new DenseVector([1, 2, 3]);
 
         // Act
-        float result1 = 0;
-        float result2 = 0;
+        float result1;
+        float result2;
         switch (distanceMetric)
         {
             case DistanceMetricType.ManhattanDistance:
@@ -186,7 +186,6 @@ public class DistanceMetricBasicTests
     {
         ManhattanDistance,
         EuclideanDistance,
-        CosineSimilarity,
+        CosineSimilarity
     }
-
 }
