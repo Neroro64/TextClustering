@@ -27,6 +27,7 @@ public record DenseVector(float[] Data) : IEmbeddingVector<DenseVector>
 {
     /// <inheritdoc />
     public int Length => Data.Length;
+
     public float this[int index] => Data[index];
 
     private int _hashCode = -1;
@@ -61,6 +62,7 @@ public record DenseVector(float[] Data) : IEmbeddingVector<DenseVector>
     {
         return GetHashCode() == other?.GetHashCode();
     }
+
 }
 
 /// <summary>
@@ -70,7 +72,9 @@ public record SparseVector(Dictionary<int, float> Data) : IEmbeddingVector<Spars
 {
     /// <inheritdoc />
     public int Length => Data.Count;
+
     public float this[int index] => Data[index];
+
     public bool ContainsKey(int key) => Data.ContainsKey(key);
 
     private int _hashCode = -1;

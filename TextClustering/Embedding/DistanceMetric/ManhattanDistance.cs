@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Embedding.DistanceMetric;
 
 /// <summary>
@@ -13,10 +15,13 @@ public abstract class ManhattanDistance : IDistanceMetric<DenseVector>, IDistanc
     /// <returns>The Manhattan distance as a float value.</returns>
     public static float CalculateDistance(DenseVector vector1, DenseVector vector2)
     {
+        var v1 = vector1.Data.ToSIMDVectors();
+        var v2 = vector2.Data.ToSIMDVectors();
+
         double distance = 0;
         for (int i = 0; i < vector1.Length; i++)
         {
-            distance += Math.Abs(vector1[i] - vector2[i]);
+            distance += Vector.Sum(Vector.Abs(v1[i] - v2[i]));
         }
 
         return (float)distance;

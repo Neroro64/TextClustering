@@ -90,7 +90,7 @@ public class CosineSimilarityBenchmark
     }
 
     [Benchmark]
-    public void CompulteCosineSimilarityOnFloatArray()
+    public void CompulteCosineSimilarityOnVectors()
     {
         foreach (var (vector1, vector2) in DataSet1)
         {
@@ -117,7 +117,26 @@ public class CosineSimilarityBenchmark
     }
 
     [Benchmark]
-    public void ComputeCosineSimilarityOnVector()
+    public void ComputeCosineSimilarityOnDictionaryWithVector()
+    {
+        foreach (var (vector1, vector2) in DataSet3)
+        {
+            // Calculate dot product
+            int[] commonKeys = vector1.Data.Keys.Intersect(vector2.Data.Keys).ToArray();
+            if (commonKeys is [])
+            {
+                continue;
+            }
+
+            DenseVector vec1 = new(commonKeys.Select(k => vector1[k]).ToArray());
+            DenseVector vec2 = new(commonKeys.Select(k => vector2[k]).ToArray());
+
+            _ = CosineSimilarity.CalculateDistance(vec1, vec2);
+        }
+    }
+
+    [Benchmark]
+    public void ComputeCosineSimilarityOnVector2()
     {
         // Since the System.Numerics.Vector<T> has fixed size, we need to vectorize the calculation manually.
         const int numberOfDotProducts = 3;

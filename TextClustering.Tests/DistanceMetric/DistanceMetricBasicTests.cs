@@ -55,6 +55,29 @@ public class DistanceMetricBasicTests
     }
 
     [TestMethod]
+    [DataRow(DistanceMetricType.ManhattanDistance, 12f)]
+    [DataRow(DistanceMetricType.EuclideanDistance, 7.4833f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 2f)]
+    public void CalculateDistance_DenseVectors_OppositeVectors_Long(DistanceMetricType distanceMetric, float expectedValue)
+    {
+        // Arrange
+        var vector1 = new DenseVector(Enumerable.Range(1, 512).Select(v => (float)v).ToArray());
+        var vector2 = new DenseVector(Enumerable.Range(1, 512).Select(v => (float)-v).ToArray());
+
+        // Act
+        float result = distanceMetric switch
+        {
+            DistanceMetricType.ManhattanDistance => ManhattanDistance.CalculateDistance(vector1, vector2),
+            DistanceMetricType.EuclideanDistance => EuclideanDistance.CalculateDistance(vector1, vector2),
+            DistanceMetricType.CosineSimilarity => CosineSimilarity.CalculateDistance(vector1, vector2),
+            _ => throw new InvalidOperationException()
+        };
+
+        // Assert
+        Assert.AreEqual(expectedValue, result, Epsilon);
+    }
+
+    [TestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 2f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 1.414f)]
     [DataRow(DistanceMetricType.CosineSimilarity, 1f)]

@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Embedding.DistanceMetric;
 
 /// <summary>
@@ -19,15 +21,22 @@ public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistance
     public static float CalculateDistance(DenseVector vector1, DenseVector vector2)
     {
         // Calculate dot product of the two vectors
-        double dotProduct = 0;
-        for (int i = 0; i < vector1.Length; i++)
+        var v1 = vector1.Data.ToSIMDVectors();
+        var v2 = vector2.Data.ToSIMDVectors();
+
+        float dotProduct = 0;
+        float v1InnerProduct = 0;
+        float v2InnerProduct = 0;
+        for (int i = 0; i < v1.Length; i++)
         {
-            dotProduct += vector1[i] * vector2[i];
+            dotProduct += Vector.Dot(v1[i], v2[i]);
+            v1InnerProduct += Vector.Dot(v1[i], v1[i]);
+            v2InnerProduct += Vector.Dot(v2[i], v2[i]);
         }
 
         // Calculate magnitudes
-        double magnitude1 = Math.Sqrt(vector1.Data.Sum(static v => v * v));
-        double magnitude2 = Math.Sqrt(vector2.Data.Sum(static v => v * v));
+        double magnitude1 = Math.Sqrt(v1InnerProduct);
+        double magnitude2 = Math.Sqrt(v2InnerProduct);
 
         // Calculate cosine similarity
         return 1f - (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
