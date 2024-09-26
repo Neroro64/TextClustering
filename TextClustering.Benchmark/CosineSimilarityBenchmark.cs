@@ -9,6 +9,7 @@ using NumpyDotNet;
 
 namespace TextClustering.Benchmark;
 
+[CsvExporter]
 public class CosineSimilarityBenchmark
 {
     private List<(DenseVector, DenseVector)> DataSet1 { get; init; } = [];
@@ -21,6 +22,8 @@ public class CosineSimilarityBenchmark
 
     [Params(10, 100, 1_000, 10_000, 100_000, 1_000_000)]
     public int DatasetSize;
+
+    private readonly int _simdVectorLength = Vector<float>.Count;
 
     [GlobalSetup]
     public void Setup()
@@ -116,9 +119,15 @@ public class CosineSimilarityBenchmark
     [Benchmark]
     public void ComputeCosineSimilarityOnVector()
     {
-        foreach (var (vector1, vector2) in DataSet4)
+        // Since the System.Numerics.Vector<T> has fixed size, we need to vectorize the calculation manually.
+        const int numberOfDotProducts = 3;
+        int numberOfRepetitions = Math.Max(1, VectorSize / _simdVectorLength) * numberOfDotProducts;
+        for (int i = 0; i < numberOfRepetitions; ++i)
         {
-            _ = Vector.Dot(vector1, vector2) / (Math.Sqrt(Vector.Dot(vector1, vector1)) * Math.Sqrt(Vector.Dot(vector2, vector2)));
+            foreach (var (vector1, vector2) in DataSet4)
+            {
+                _ = Vector.Dot(vector1, vector2) / (Math.Sqrt(Vector.Dot(vector1, vector1)) * Math.Sqrt(Vector.Dot(vector2, vector2)));
+            }
         }
     }
 }

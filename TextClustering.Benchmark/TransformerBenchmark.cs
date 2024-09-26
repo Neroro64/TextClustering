@@ -6,7 +6,7 @@ using Embedding.Transformer;
 
 namespace TextClustering.Benchmark;
 
-[RPlotExporter]
+[CsvExporter]
 public class TransformerBenchmark : IDisposable
 {
     private List<string> Documents { get; init; } = [];
