@@ -1,7 +1,7 @@
 namespace Embedding.DistanceMetric;
 
 /// <summary>
-/// Provides static methods to calculate cosine similarity between vectors.
+/// Provides static methods to calculate cosine similarity between vectors, as distance.
 /// </summary>
 public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistanceMetric<SparseVector>
 {
@@ -11,11 +11,11 @@ public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistance
     private const float Epsilon = 1e-10f;
 
     /// <summary>
-    /// Calculates the cosine similarity between two dense vectors.
+    /// Calculates the cosine similarity between two dense vectors and return it as a distance: (1 - cosine_similarity).
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The cosine similarity as a float value.</returns>
+    /// <returns>The cosine similarity distance as a float value.</returns>
     public static float CalculateDistance(DenseVector vector1, DenseVector vector2)
     {
         // Calculate dot product of the two vectors
@@ -30,15 +30,15 @@ public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistance
         double magnitude2 = Math.Sqrt(vector2.Data.Sum(static v => v * v));
 
         // Calculate cosine similarity
-        return (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
+        return 1f - (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
     }
 
     /// <summary>
-    /// Calculates the cosine similarity between two sparse vectors.
+    /// Calculates the cosine similarity between two sparse vectors and return it as a distance: (1 - cosine_similarity).
     /// </summary>
     /// <param name="vector1">The first vector.</param>
     /// <param name="vector2">The second vector.</param>
-    /// <returns>The cosine similarity as a float value.</returns>
+    /// <returns>The cosine similarity distance as a float value.</returns>
     public static float CalculateDistance(SparseVector vector1, SparseVector vector2)
     {
         // Calculate dot product
@@ -49,6 +49,6 @@ public abstract class CosineSimilarity : IDistanceMetric<DenseVector>, IDistance
         double magnitude2 = Math.Sqrt(vector2.Data.Values.Sum(v => v * v));
 
         // Calculate cosine similarity
-        return (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
+        return 1f - (float)(dotProduct / Math.Max(magnitude1 * magnitude2, Epsilon));
     }
 }

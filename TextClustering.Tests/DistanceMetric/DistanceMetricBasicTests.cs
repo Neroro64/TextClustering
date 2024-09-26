@@ -11,7 +11,7 @@ public class DistanceMetricBasicTests
     [DataTestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 0f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 0f)]
-    [DataRow(DistanceMetricType.CosineSimilarity, 1f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 0f)]
     public void CalculateDistance_DenseVectors_SameVector(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -34,7 +34,7 @@ public class DistanceMetricBasicTests
     [TestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 12f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 7.4833f)]
-    [DataRow(DistanceMetricType.CosineSimilarity, -1f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 2f)]
     public void CalculateDistance_DenseVectors_OppositeVectors(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -57,7 +57,7 @@ public class DistanceMetricBasicTests
     [TestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 2f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 1.414f)]
-    [DataRow(DistanceMetricType.CosineSimilarity, 0f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 1f)]
     public void CalculateDistance_DenseVectors_PerpendicularVectors(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -80,7 +80,7 @@ public class DistanceMetricBasicTests
     [TestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 0f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 0f)]
-    [DataRow(DistanceMetricType.CosineSimilarity, 1f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 0f)]
     public void CalculateDistance_SparseVectors_SameVector(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -113,7 +113,7 @@ public class DistanceMetricBasicTests
     [TestMethod]
     [DataRow(DistanceMetricType.ManhattanDistance, 18f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 10.77f)]
-    [DataRow(DistanceMetricType.CosineSimilarity, -1f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 2f)]
     public void CalculateDistance_SparseVectors_OppositeVectors(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -170,8 +170,8 @@ public class DistanceMetricBasicTests
                 result2 = EuclideanDistance.CalculateDistance(vector1, vector3);
                 break;
             case DistanceMetricType.CosineSimilarity:
-                result1 = 1 - Math.Abs(CosineSimilarity.CalculateDistance(vector1, vector2));
-                result2 = 1 - Math.Abs(CosineSimilarity.CalculateDistance(vector1, vector3));
+                result1 = CosineSimilarity.CalculateDistance(vector1, vector2);
+                result2 = CosineSimilarity.CalculateDistance(vector1, vector3);
                 break;
             default:
                 throw new InvalidOperationException();
