@@ -1,4 +1,4 @@
-using Embedding;
+using Embedding.EmbeddingVector;
 
 namespace Clustering;
 

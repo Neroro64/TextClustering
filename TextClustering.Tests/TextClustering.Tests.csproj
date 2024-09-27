@@ -1,6 +1,7 @@
 <Project Sdk="MSTest.Sdk/3.5.1">
 
     <ItemGroup>
+        <ProjectReference Include="..\TextClustering\Clustering\Clustering.csproj" />
         <ProjectReference Include="..\TextClustering\Embedding\Embedding.csproj" />
     </ItemGroup>
     <PropertyGroup>

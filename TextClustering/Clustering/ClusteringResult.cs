@@ -1,3 +1,3 @@
 namespace Clustering;
 
-public record ClusteringResult(IReadOnlyCollection<int> Labels, IReadOnlyCollection<float> OutliersScores);
+public record ClusteringResult(IReadOnlyCollection<Guid> Labels, IReadOnlyCollection<float> OutlierScores);
