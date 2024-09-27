@@ -55,8 +55,8 @@ public class DistanceMetricBasicTests
     }
 
     [TestMethod]
-    [DataRow(DistanceMetricType.ManhattanDistance, 12f)]
-    [DataRow(DistanceMetricType.EuclideanDistance, 7.4833f)]
+    [DataRow(DistanceMetricType.ManhattanDistance, 262656f)]
+    [DataRow(DistanceMetricType.EuclideanDistance, 13397.074f)]
     [DataRow(DistanceMetricType.CosineSimilarity, 2f)]
     public void CalculateDistance_DenseVectors_OppositeVectors_Long(DistanceMetricType distanceMetric, float expectedValue)
     {

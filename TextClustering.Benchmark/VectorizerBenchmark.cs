@@ -3,35 +3,31 @@ using System.Text;
 using BenchmarkDotNet.Attributes;
 
 using Embedding.BowVectorizer;
+using Embedding.Transformer;
 
 namespace TextClustering.Benchmark;
 
-[CsvExporter]
-public class CountVectorizerBenchmark
+[JsonExporterAttribute.Brief]
+public class VectorizerBenchmark : IDisposable
 {
     private List<string> Documents { get; init; } = [];
 
     private readonly CountVectorizer _multiThreaddedVectorizer = new(new() { Languages = [] });
     private readonly SingleThreaddedCountVectorizer _singleThreaddedVectorizer = new(new() { Languages = [] });
     private readonly MultiThreaddedCountVectorizerWithPartitioner _multiThreaddedCountVectorizerWithPartitioner = new(new() { Languages = [] });
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    private MultiThreaddedCountVectorizerWithChunk _multiThreaddedCountVectorizerWithChunk;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+    private readonly MultiThreaddedCountVectorizerWithChunk _multiThreaddedCountVectorizerWithChunk = new(new() { Languages = [] }, chunkSize: 10);
+    private readonly BertTransformer _transformer = new();
 
-    [Params(10, 100, 1_000, 10_000, 100_000)]
+    [Params(100, 1_000, 10_000, 100_000)]
     public int DatasetSize;
-
-    [Params(10, 100, 1_000)]
-    public int ChunkSize = 10;
 
     [GlobalSetup]
     public void Setup()
     {
-        _multiThreaddedCountVectorizerWithChunk = new(new() { Languages = [] }, chunkSize: ChunkSize);
         var random = new Random();
         for (int i = 0; i < DatasetSize; ++i)
         {
-            Documents.Add(GenerateRandomDocument(random, 2, 512));
+            Documents.Add(GenerateRandomDocument(random, 64, 4096));
         }
     }
 
@@ -71,5 +67,17 @@ public class CountVectorizerBenchmark
     public void MultiThreaddedVectorizeWithPartitioner()
     {
         _ = _multiThreaddedCountVectorizerWithPartitioner.FitThenTransform(Documents).ToList();
+    }
+
+    [Benchmark]
+    public void Transformer()
+    {
+        _ = _transformer.Transform(Documents);
+    }
+
+    public void Dispose()
+    {
+        _transformer.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

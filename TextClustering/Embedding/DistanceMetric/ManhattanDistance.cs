@@ -19,7 +19,7 @@ public abstract class ManhattanDistance : IDistanceMetric<DenseVector>, IDistanc
         var v2 = vector2.Data.ToSIMDVectors();
 
         double distance = 0;
-        for (int i = 0; i < vector1.Length; i++)
+        for (int i = 0; i < v1.Length; i++)
         {
             distance += Vector.Sum(Vector.Abs(v1[i] - v2[i]));
         }

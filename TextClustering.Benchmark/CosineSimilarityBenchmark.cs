@@ -5,11 +5,13 @@ using BenchmarkDotNet.Attributes;
 using Embedding;
 using Embedding.DistanceMetric;
 
+using Microsoft.CodeAnalysis.CSharp;
+
 using NumpyDotNet;
 
 namespace TextClustering.Benchmark;
 
-[CsvExporter]
+[JsonExporterAttribute.Brief]
 public class CosineSimilarityBenchmark
 {
     private List<(DenseVector, DenseVector)> DataSet1 { get; init; } = [];
@@ -20,7 +22,7 @@ public class CosineSimilarityBenchmark
     [Params(128, 256, 512, 1024)]
     public int VectorSize;
 
-    [Params(10, 100, 1_000, 10_000, 100_000, 1_000_000)]
+    [Params(100, 10_000, 1_000_000)]
     public int DatasetSize;
 
     private readonly int _simdVectorLength = Vector<float>.Count;
@@ -87,6 +89,24 @@ public class CosineSimilarityBenchmark
             vector2[i] = GenerateRandomFloat(random, minValue, maxValue);
         }
         return (new(vector1), new(vector2));
+    }
+
+    [Benchmark]
+    public void CompulteCosineSimilarityOnFloatArray()
+    {
+        foreach (var (vector1, vector2) in DataSet1)
+        {
+            double distance = 0;
+            double v1Sum = 0;
+            double v2Sum = 0;
+            for (int i = 0 ; i < vector1.Length; ++i)
+            {
+                distance += vector1[i] * vector2[i];
+                v1Sum += vector1[i] * vector1[i];
+                v2Sum += vector2[i] * vector2[i];
+            }
+            _ = 1f - (float)(distance / Math.Max(Math.Sqrt(v1Sum) * Math.Sqrt(v2Sum), 1e-10));
+        }
     }
 
     [Benchmark]
