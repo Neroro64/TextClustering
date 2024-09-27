@@ -14,16 +14,18 @@ charset = utf-8
 
 # Suppress warnings
 
-# Namespace declaration preferences
+## Namespace declaration preferences
 dotnet_diagnostic.IDE0130.severity = none
 dotnet_diagnostic.IDE0160.severity = none
 dotnet_diagnostic.IDE0161.severity = none
 
-# Populate switch
+## Populate switch
 dotnet_diagnostic.IDE0072.severity = none
 
+## Remove redundant parentheses
+resharper_arrange_redundant_parentheses_highlighting=none
 
-# Non-readonly type member referenced in 'GetHashCode()
+## Non-readonly type member referenced in 'GetHashCode()
 resharper_non_readonly_member_in_get_hash_code_highlighting = none
 
 # Organize usings
