@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <PackageReference Include="FastBertTokenizer" Version="1.0.28"/>
-        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.18.1"/>
-        <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.19.2"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="dotnet-stop-words" Version="1.1.0"/>
+        <PackageReference Include="FastBertTokenizer" Version="1.0.28" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu" Version="1.18.1" />
+        <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.19.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="dotnet-stop-words" Version="1.1.0" />
+        <PackageReference Include="System.Numerics.Tensors" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>

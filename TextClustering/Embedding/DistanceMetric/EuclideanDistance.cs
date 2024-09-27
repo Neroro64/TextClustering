@@ -1,4 +1,4 @@
-using System.Numerics;
+using System.Numerics.Tensors;
 
 namespace Embedding.DistanceMetric;
 
@@ -15,16 +15,7 @@ public abstract class EuclideanDistance : IDistanceMetric<DenseVector>, IDistanc
     /// <returns>The Euclidean distance as a float value.</returns>
     public static float CalculateDistance(DenseVector vector1, DenseVector vector2)
     {
-        var v1 = vector1.Data.ToSIMDVectors();
-        var v2 = vector2.Data.ToSIMDVectors();
-
-        double distance = 0;
-        for (int i = 0; i < v1.Length; i++)
-        {
-            distance += Vector.Dot(v1[i] - v2[i], v1[i] - v2[i]);
-        }
-
-        return (float)Math.Sqrt(distance);
+        return TensorPrimitives.Distance(vector1.Data, vector2.Data);
     }
 
     /// <summary>
@@ -35,11 +26,7 @@ public abstract class EuclideanDistance : IDistanceMetric<DenseVector>, IDistanc
     /// <returns>The Euclidean distance as a float value.</returns>
     public static float CalculateDistance(SparseVector vector1, SparseVector vector2)
     {
-        double distance = vector1.Data.Keys
-            .Intersect(vector2.Data.Keys)
-            .AsParallel()
-            .Sum(key => (vector1[key] - vector2[key]) * (vector1[key] - vector2[key]));
-
-        return (float)Math.Sqrt(distance);
+        var (v1, v2) = SparseVector.ToDenseVectors(vector1, vector2);
+        return CalculateDistance(v1, v2);
     }
 }

@@ -61,8 +61,8 @@ public class DistanceMetricBasicTests
     public void CalculateDistance_DenseVectors_OppositeVectors_Long(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
-        var vector1 = new DenseVector(Enumerable.Range(1, 512).Select(v => (float)v).ToArray());
-        var vector2 = new DenseVector(Enumerable.Range(1, 512).Select(v => (float)-v).ToArray());
+        var vector1 = new DenseVector(Enumerable.Range(1, 512).Select(static v => (float)v).ToArray());
+        var vector2 = new DenseVector(Enumerable.Range(1, 512).Select(static v => (float)-v).ToArray());
 
         // Act
         float result = distanceMetric switch
@@ -151,6 +151,39 @@ public class DistanceMetricBasicTests
             { 1, -2 },
             { 2, -3 },
             { 3, -4 }
+        });
+
+        // Act
+        float result = distanceMetric switch
+        {
+            DistanceMetricType.ManhattanDistance => ManhattanDistance.CalculateDistance(vector1, vector2),
+            DistanceMetricType.EuclideanDistance => EuclideanDistance.CalculateDistance(vector1, vector2),
+            DistanceMetricType.CosineSimilarity => CosineSimilarity.CalculateDistance(vector1, vector2),
+            _ => throw new InvalidOperationException()
+        };
+
+        // Assert
+        Assert.AreEqual(expectedValue, result, Epsilon);
+    }
+
+    [TestMethod]
+    [DataRow(DistanceMetricType.ManhattanDistance, 18f)]
+    [DataRow(DistanceMetricType.EuclideanDistance, 7.615f)]
+    [DataRow(DistanceMetricType.CosineSimilarity, 1f)]
+    public void CalculateDistance_SparseVectors_NonOverLappingCoords(DistanceMetricType distanceMetric, float expectedValue)
+    {
+        // Arrange
+        var vector1 = new SparseVector(new Dictionary<int, float>
+        {
+            { 1, 2 },
+            { 2, 3 },
+            { 3, 4 }
+        });
+        var vector2 = new SparseVector(new Dictionary<int, float>
+        {
+            { 4, 2 },
+            { 5, 3 },
+            { 6, 4 }
         });
 
         // Act
