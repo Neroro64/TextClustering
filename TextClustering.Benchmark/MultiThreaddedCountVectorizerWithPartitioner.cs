@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 
-using Embedding;
 using Embedding.BowVectorizer;
 
 namespace TextClustering.Benchmark;

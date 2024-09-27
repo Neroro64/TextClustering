@@ -3,7 +3,6 @@ using System.Numerics.Tensors;
 
 using BenchmarkDotNet.Attributes;
 
-using Embedding;
 using Embedding.DistanceMetric;
 
 using NumpyDotNet;

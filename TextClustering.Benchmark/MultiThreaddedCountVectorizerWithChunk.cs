@@ -1,4 +1,3 @@
-using Embedding;
 using Embedding.BowVectorizer;
 
 namespace TextClustering.Benchmark;
