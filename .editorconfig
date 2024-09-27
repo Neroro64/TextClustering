@@ -19,6 +19,10 @@ dotnet_diagnostic.IDE0130.severity = none
 dotnet_diagnostic.IDE0160.severity = none
 dotnet_diagnostic.IDE0161.severity = none
 
+# Populate switch
+dotnet_diagnostic.IDE0072.severity = none
+
+
 # Non-readonly type member referenced in 'GetHashCode()
 resharper_non_readonly_member_in_get_hash_code_highlighting = none
 

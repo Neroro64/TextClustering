@@ -1,3 +1,5 @@
+using System.Numerics.Tensors;
+
 namespace Embedding;
 
 /// <summary>
@@ -75,6 +77,18 @@ public record DenseVector(float[] Data) : IEmbeddingVector<DenseVector>
     bool IEquatable<IEmbeddingVector<DenseVector>>.Equals(IEmbeddingVector<DenseVector>? other)
     {
         return GetHashCode() == other?.GetHashCode();
+    }
+
+    /// <summary>
+    /// Returns the dense vector as a unit vector.
+    /// </summary>
+    /// <returns>A new <see cref="DenseVector"/> in the same direction but with magnitude 1.</returns>
+    public DenseVector ToUnitVector()
+    {
+        float v1Norm = TensorPrimitives.Norm(Data);
+        float[] unitVector = new float[Length];
+        TensorPrimitives.Divide(Data, v1Norm, unitVector);
+        return new(unitVector);
     }
 }
 

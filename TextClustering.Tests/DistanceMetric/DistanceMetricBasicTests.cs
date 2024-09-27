@@ -12,6 +12,9 @@ public class DistanceMetricBasicTests
     [DataRow(DistanceMetricType.ManhattanDistance, 0f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 0f)]
     [DataRow(DistanceMetricType.CosineSimilarity, 0f)]
+    [DataRow(DistanceMetricType.ManhattanDistanceInUnitSphere, 0f)]
+    [DataRow(DistanceMetricType.EuclideanDistanceInUnitSphere, 0f)]
+    [DataRow(DistanceMetricType.CosineSimilarityInUnitSphere, 0f)]
     public void CalculateDistance_DenseVectors_SameVector(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -24,6 +27,9 @@ public class DistanceMetricBasicTests
             DistanceMetricType.ManhattanDistance => ManhattanDistance.CalculateDistance(vector1, vector2),
             DistanceMetricType.EuclideanDistance => EuclideanDistance.CalculateDistance(vector1, vector2),
             DistanceMetricType.CosineSimilarity => CosineSimilarity.CalculateDistance(vector1, vector2),
+            DistanceMetricType.ManhattanDistanceInUnitSphere => ManhattanDistance.CalculateUnitSphereDistance(vector1, vector2),
+            DistanceMetricType.EuclideanDistanceInUnitSphere => EuclideanDistance.CalculateUnitSphereDistance(vector1, vector2),
+            DistanceMetricType.CosineSimilarityInUnitSphere => CosineSimilarity.CalculateUnitSphereDistance(vector1, vector2),
             _ => throw new InvalidOperationException()
         };
 
@@ -58,6 +64,9 @@ public class DistanceMetricBasicTests
     [DataRow(DistanceMetricType.ManhattanDistance, 262656f)]
     [DataRow(DistanceMetricType.EuclideanDistance, 13397.074f)]
     [DataRow(DistanceMetricType.CosineSimilarity, 2f)]
+    [DataRow(DistanceMetricType.ManhattanDistanceInUnitSphere, 39.21f)]
+    [DataRow(DistanceMetricType.EuclideanDistanceInUnitSphere, 2f)]
+    [DataRow(DistanceMetricType.CosineSimilarityInUnitSphere, 2f)]
     public void CalculateDistance_DenseVectors_OppositeVectors_Long(DistanceMetricType distanceMetric, float expectedValue)
     {
         // Arrange
@@ -70,6 +79,9 @@ public class DistanceMetricBasicTests
             DistanceMetricType.ManhattanDistance => ManhattanDistance.CalculateDistance(vector1, vector2),
             DistanceMetricType.EuclideanDistance => EuclideanDistance.CalculateDistance(vector1, vector2),
             DistanceMetricType.CosineSimilarity => CosineSimilarity.CalculateDistance(vector1, vector2),
+            DistanceMetricType.ManhattanDistanceInUnitSphere => ManhattanDistance.CalculateUnitSphereDistance(vector1, vector2),
+            DistanceMetricType.EuclideanDistanceInUnitSphere => EuclideanDistance.CalculateUnitSphereDistance(vector1, vector2),
+            DistanceMetricType.CosineSimilarityInUnitSphere => CosineSimilarity.CalculateUnitSphereDistance(vector1, vector2),
             _ => throw new InvalidOperationException()
         };
 
@@ -203,6 +215,9 @@ public class DistanceMetricBasicTests
     [DataRow(DistanceMetricType.ManhattanDistance)]
     [DataRow(DistanceMetricType.EuclideanDistance)]
     [DataRow(DistanceMetricType.CosineSimilarity)]
+    [DataRow(DistanceMetricType.ManhattanDistanceInUnitSphere)]
+    [DataRow(DistanceMetricType.EuclideanDistanceInUnitSphere)]
+    [DataRow(DistanceMetricType.CosineSimilarityInUnitSphere)]
     public void CalculateDistance_DenseVectors_SimilarVectors_ReturnsHigherScore_ThanDifferentVectors(DistanceMetricType distanceMetric)
     {
         // Arrange
@@ -229,6 +244,18 @@ public class DistanceMetricBasicTests
                 result1 = CosineSimilarity.CalculateDistance(vector1, vector2);
                 result2 = CosineSimilarity.CalculateDistance(vector1, vector3);
                 break;
+            case DistanceMetricType.ManhattanDistanceInUnitSphere:
+                result1 = ManhattanDistance.CalculateUnitSphereDistance(vector1, vector2);
+                result2 = ManhattanDistance.CalculateUnitSphereDistance(vector1, vector3);
+                break;
+            case DistanceMetricType.EuclideanDistanceInUnitSphere:
+                result1 = EuclideanDistance.CalculateUnitSphereDistance(vector1, vector2);
+                result2 = EuclideanDistance.CalculateUnitSphereDistance(vector1, vector3);
+                break;
+            case DistanceMetricType.CosineSimilarityInUnitSphere:
+                result1 = CosineSimilarity.CalculateUnitSphereDistance(vector1, vector2);
+                result2 = CosineSimilarity.CalculateUnitSphereDistance(vector1, vector3);
+                break;
             default:
                 throw new InvalidOperationException();
         }
@@ -242,6 +269,9 @@ public class DistanceMetricBasicTests
     {
         ManhattanDistance,
         EuclideanDistance,
-        CosineSimilarity
+        CosineSimilarity,
+        ManhattanDistanceInUnitSphere,
+        EuclideanDistanceInUnitSphere,
+        CosineSimilarityInUnitSphere
     }
 }
