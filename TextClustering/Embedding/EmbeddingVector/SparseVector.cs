@@ -1,96 +1,4 @@
-using System.Numerics.Tensors;
-
-namespace Embedding;
-
-/// <summary>
-/// Represents an interface for embedding vectors, providing methods to calculate distances between vectors.
-/// </summary>
-/// <typeparam name="TVector">The type of the vector.</typeparam>
-public interface IEmbeddingVector<TVector> : IEquatable<IEmbeddingVector<TVector>>
-{
-    /// <summary>
-    /// Calculates the distance between this vector and another vector using a specified distance metric.
-    /// </summary>
-    /// <param name="other">The other vector to calculate the distance with.</param>
-    /// <param name="calculateDistance">The function to calculate the distance between two vectors.</param>
-    /// <returns>The calculated distance between the two vectors.</returns>
-    float DistanceTo(TVector other, Func<TVector, TVector, float> calculateDistance);
-
-    /// <summary>
-    /// Gets the length of this vector.
-    /// </summary>
-    int Length { get; }
-}
-
-/// <summary>
-/// Represents a dense embedding vector with a specified data type and array of values.
-/// </summary>
-public record DenseVector(float[] Data) : IEmbeddingVector<DenseVector>
-{
-    /// <inheritdoc />
-    public int Length => Data.Length;
-
-    /// <summary>
-    /// Gets the value at the specified index in the vector.
-    /// </summary>
-    /// <param name="index">The index of the value to retrieve.</param>
-    /// <returns>The value at the specified index.</returns>
-    public float this[int index] => Data[index];
-
-    private int _hashCode = -1;
-
-    /// <inheritdoc />
-    public float DistanceTo(DenseVector other, Func<DenseVector, DenseVector, float> calculateDistance)
-    {
-        return calculateDistance(this, other);
-    }
-
-    /// <summary>
-    /// Gets the hash code for this vector.
-    /// </summary>
-    /// <returns>The hash code.</returns>
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            if (_hashCode != -1)
-            {
-                return _hashCode;
-            }
-
-            const int prime = 31;
-            int hash = 17;
-            foreach (float value in Data)
-            {
-                hash = (hash * prime) + BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
-            }
-            _hashCode = hash;
-            return hash;
-        }
-    }
-
-    /// <summary>
-    /// Determines whether this vector is equal to another object.
-    /// </summary>
-    /// <param name="other">The other object to compare with.</param>
-    /// <returns>True if the vectors are equal; otherwise, false.</returns>
-    bool IEquatable<IEmbeddingVector<DenseVector>>.Equals(IEmbeddingVector<DenseVector>? other)
-    {
-        return GetHashCode() == other?.GetHashCode();
-    }
-
-    /// <summary>
-    /// Returns the dense vector as a unit vector.
-    /// </summary>
-    /// <returns>A new <see cref="DenseVector"/> in the same direction but with magnitude 1.</returns>
-    public DenseVector ToUnitVector()
-    {
-        float v1Norm = TensorPrimitives.Norm(Data);
-        float[] unitVector = new float[Length];
-        TensorPrimitives.Divide(Data, v1Norm, unitVector);
-        return new(unitVector);
-    }
-}
+namespace Embedding.EmbeddingVector;
 
 /// <summary>
 /// Represents a sparse embedding vector with a specified data type and dictionary of non-zero values.
@@ -120,6 +28,20 @@ public record SparseVector(Dictionary<int, float> Data) : IEmbeddingVector<Spars
     public float DistanceTo(SparseVector other, Func<SparseVector, SparseVector, float> calculateDistance)
     {
         return calculateDistance(this, other);
+    }
+
+    /// <inheritdoc />
+    public SparseVector GetCentroidVector(SparseVector other, float weight = 1f)
+    {
+        Dictionary<int, float> centroid = [];
+        int[] keys = Data.Keys.Union(other.Data.Keys).ToArray();
+        foreach (int key in keys)
+        {
+            float thisValue = Data.GetValueOrDefault(key, 0f);
+            float otherValue = other.Data.GetValueOrDefault(key, 0f);
+            centroid[key] = thisValue + (weight * 0.5f * (otherValue - thisValue));
+        }
+        return new(centroid);
     }
 
     /// <summary>

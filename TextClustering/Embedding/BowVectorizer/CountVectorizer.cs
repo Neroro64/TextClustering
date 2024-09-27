@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
+using Embedding.EmbeddingVector;
+
 using StopWord;
 
 namespace Embedding.BowVectorizer;

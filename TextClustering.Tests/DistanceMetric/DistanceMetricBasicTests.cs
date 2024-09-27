@@ -1,4 +1,5 @@
 using Embedding.DistanceMetric;
+using Embedding.EmbeddingVector;
 
 namespace TextClustering.Tests.DistanceMetric;
 

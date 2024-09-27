@@ -4,6 +4,7 @@ using System.Numerics.Tensors;
 using BenchmarkDotNet.Attributes;
 
 using Embedding.DistanceMetric;
+using Embedding.EmbeddingVector;
 
 using NumpyDotNet;
 

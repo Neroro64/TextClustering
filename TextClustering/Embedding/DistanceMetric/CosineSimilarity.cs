@@ -1,5 +1,7 @@
 using System.Numerics.Tensors;
 
+using Embedding.EmbeddingVector;
+
 namespace Embedding.DistanceMetric;
 
 /// <summary>

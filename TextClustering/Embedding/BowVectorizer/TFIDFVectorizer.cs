@@ -1,3 +1,5 @@
+using Embedding.EmbeddingVector;
+
 namespace Embedding.BowVectorizer;
 
 /// <summary>

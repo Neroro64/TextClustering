@@ -1,6 +1,8 @@
 #pragma warning disable FBERTTOK001
 using System.Collections.ObjectModel;
 
+using Embedding.EmbeddingVector;
+
 using FastBertTokenizer;
 
 using Microsoft.ML.OnnxRuntime;

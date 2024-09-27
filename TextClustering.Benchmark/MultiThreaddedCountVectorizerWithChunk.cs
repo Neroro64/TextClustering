@@ -1,4 +1,5 @@
 using Embedding.BowVectorizer;
+using Embedding.EmbeddingVector;
 
 namespace TextClustering.Benchmark;
 
